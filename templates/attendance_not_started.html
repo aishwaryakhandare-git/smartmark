@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance Not Started - {{ subject }}</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #eaeaf0, #6265b8);
+  color: #fff;
+  text-align: center;
+  padding: 50px;
+  min-height: 100vh;
+}
+h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+.button {
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 1.1rem;
+  border-radius: 10px;
+  text-decoration: none;
+  color: white;
+  background: #6a11cb;
+  transition: 0.3s;
+}
+.button:hover {
+  background: #2575fc;
+}
+</style>
+</head>
+<body>
+
+<h2>Attendance Not Started</h2>
+<p>The teacher has not started the attendance for <strong>{{ subject }}</strong> today.</p>
+<a href="{{ url_for('student_login') }}" class="button">Go Back to Login</a>
+
+</body>
+</html>

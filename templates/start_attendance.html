@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Start Attendance - {{ subject }}</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align:center; background: linear-gradient(135deg,#6a11cb,#2575fc); color: #fff; min-height: 100vh; }
+  .container { margin: 50px auto; padding: 30px; background: rgba(255,255,255,0.1); border-radius: 20px; width: 350px; }
+  h2 { margin-bottom: 20px; }
+  .code { font-size: 2rem; font-weight: bold; margin: 20px 0; }
+  button { padding: 12px 25px; font-size: 1rem; border:none; border-radius:12px; background:#ff9f43; color:#fff; cursor:pointer; }
+  button:hover { transform: scale(1.05); }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Start Attendance for {{ subject }}</h2>
+  <p>Today's Class Code:</p>
+  <div class="code">{{ class_code }}</div>
+  <p>Students will use this code to mark attendance.</p>
+  <form method="POST" action="{{ url_for('mark_attendance', course=course, class_key=class_key, subject=subject) }}">
+    <button type="submit">Mark Attendance as Started</button>
+  </form>
+</div>
+</body>
+</html>

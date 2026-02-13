@@ -1,0 +1,764 @@
+{% extends "base.html" %}
+{% set active = "attendance" %}
+
+{% block title %}Attendance - {{ subject }}{% endblock %}
+
+{% block content %}
+
+<div class="att-container">
+
+    {% if error %}
+    <div class="att-success-box" style="
+        background:#ffe6e6;
+        border-color:#ef4444;
+    ">
+        <div class="att-success-icon" style="color:#ef4444;">✖</div>
+        <div>
+            <p class="att-success-title">Attendance Error</p>
+            <p class="att-success-sub">{{ error }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- PAGE TITLE -->
+    <h2 class="att-heading">Attendance</h2>
+
+    <div class="att-grid-2col">
+
+        <!-- ================= LEFT COLUMN ================= -->
+        <div class="att-left-col">
+
+            <!-- Active Lecture Card -->
+            <div class="att-card att-lecture-card" style="text-align:center;">
+
+                <p class="att-active-title" id="att-status-text" style="color:#9ca3af;">
+                    No Active Attendance
+                </p>
+
+                <p class="att-lecture-name" id="att-subject" style="color:#9ca3af;">
+                    Enter class code to start
+                </p>
+
+                <p class="att-teacher" id="att-teacher">
+                    Dr. Instructor
+                </p>
+
+                <span class="att-active-dot" id="att-active-dot" style="display:none;"></span>
+
+            </div>
+
+
+                
+
+            <!-- Today's Lectures -->
+            <h3 class="att-today-title">Today's Lectures</h3>
+
+            <div class="att-lecture-list">
+
+            {% if today_lectures|length > 0 %}
+
+                {% for lec in today_lectures %}
+
+                <div class="att-lecture-item
+                    {% if current_lecture and lec.subject == current_lecture.subject %}
+                        att-current
+                    {% endif %}
+                ">
+                    <p>{{ lec.start_time }} - {{ lec.end_time }}</p>
+                    <h4>{{ lec.subject }}</h4>
+                    <small style="color:#6b7280;">{{ lec.teacher }}</small>
+                </div>
+
+                {% endfor %}
+            {% else %}
+                <p style="color:#6b7280;">No lectures scheduled today.</p>
+            {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- ================= RIGHT COLUMN (NEW CAMERA DESIGN) ================= -->
+        <div class="att-card att-face-box">
+
+            <div class="att-camera-wrapper">
+                <video id="video" autoplay muted playsinline></video>
+                <span class="corner tl"></span>
+                <span class="corner tr"></span>
+                <span class="corner bl"></span>
+                <span class="corner br"></span>
+
+                <canvas id="canvas" style="display:none"></canvas>
+            </div>
+
+            <h3 class="att-face-title">Face Recognition</h3>
+            <p class="att-face-sub">Ensure your face is clearly visible to the camera.</p>
+
+            <form id="attendanceForm"
+                method="POST"
+                action="{{ url_for('student_attendance', course=course) }}"
+                onsubmit="return false;">
+
+
+                <!-- CLASS CODE INPUT FIELD -->
+                <div class="att-input-wrapper">
+
+                    <input type="text"
+                        id="classCodeInput"
+                        name="class_code"
+                        placeholder="Enter Class Code"
+                        required
+                        
+                </div>
+                <input type="hidden" id="captured_image" name="captured_image">
+
+                <!-- BUTTON -->
+                <button type="button"
+                        id="captureBtn"
+                        class="att-start-btn">
+
+
+                    Start Face Recognition
+                </button>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- ============ ATTENDANCE MARKED MESSAGE ============ -->
+    {% if marked %}
+    <div class="att-success-box" id="successBox">
+        <div class="att-success-icon">✔</div>
+        <div>
+            <p class="att-success-title">Attendance Marked</p>
+            <p class="att-success-sub">
+                Your attendance was successfully recorded at {{ marked_time }}.
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- ===== APP STYLE POPUP (REQUIRED) ===== -->
+    <div class="app-popup hidden" id="appPopup">
+        <div class="app-popup-box" id="appPopupBox">
+            <div class="app-popup-icon" id="popupIcon">✔</div>
+            <div class="app-popup-text" id="popupText">
+                Attendance marked successfully
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block style %}
+<style>
+
+body {
+    background-color: #f8fafc;
+    background-image:
+        radial-gradient(at 0% 0%, rgb(225, 233, 234) 0, transparent 50%),
+        radial-gradient(at 100% 0%, rgb(242, 243, 248) 0, transparent 50%),
+        radial-gradient(at 100% 100%, rgb(217, 225, 226) 0, transparent 50%),
+        radial-gradient(at 0% 100%, rgb(245, 246, 249) 0, transparent 50%);
+}
+
+/* ================== Layout ================== */
+.att-container {
+    max-width: 1300px;
+    margin: 25px auto 0 auto;
+    padding: 5px 20px 20px 20px;
+    height: calc(100vh - 80px);
+}
+
+.att-heading {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: #111;
+    margin-top: 0;
+    margin-bottom: 12px;
+}
+
+.att-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 40px;
+    align-items: start;
+    height: 100%;
+}
+
+/* ================== Cards ================== */
+.att-card {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 20px 22px;
+    border: 1px solid rgba(79,70,229,0.08);
+    box-shadow: 
+        0 10px 25px rgba(0,0,0,0.06),
+        0 0 0 1px rgba(255,255,255,0.6) inset;
+}
+
+.att-face-box {
+    width: 100%;
+    max-width: 650px;   /* controls width of white card */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ================== Active Lecture Card ================== */
+.att-active-title {
+    color: #137fec;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.att-lecture-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.att-teacher,
+.att-time {
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+/* ================== Today's Lectures ================== */
+.att-today-title {
+    margin: 20px 0 10px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.att-lecture-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 12px;
+}
+
+.att-lecture-item {
+    background: white;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+}
+
+.att-lecture-item p {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.att-lecture-item h4 {
+    margin-top: 4px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.att-current {
+    background: #e8f2ff;
+    border-color: #137fec;
+}
+
+/* ================== Face Recognition Box ================== */
+.att-face-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.att-camera-wrapper {
+    width: 100%;
+    max-width: 480px;
+    height: 265px;
+    margin: 0 auto 10px;
+    border-radius: 28px;
+    overflow: hidden;
+    background: black;
+    position: relative;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+}
+
+.att-camera-wrapper video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.att-face-title {
+    margin-top: 8px;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.att-face-sub {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 10px;
+}
+
+.att-camera-wrapper::before,
+.att-camera-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.att-camera-wrapper span.corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+}
+
+.corner.tl {
+    top: 20px;
+    left: 20px;
+    border-top: 4px solid #4F46E5;
+    border-left: 4px solid #4F46E5;
+}
+
+.corner.tr {
+    top: 20px;
+    right: 20px;
+    border-top: 4px solid #4F46E5;
+    border-right: 4px solid #4F46E5;
+}
+
+.corner.bl {
+    bottom: 20px;
+    left: 20px;
+    border-bottom: 4px solid #4F46E5;
+    border-left: 4px solid #4F46E5;
+}
+
+.corner.br {
+    bottom: 20px;
+    right: 20px;
+    border-bottom: 4px solid #4F46E5;
+    border-right: 4px solid #4F46E5;
+}
+
+/* ================== Button ================== */
+.att-btn {
+    background: #137fec;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.att-btn:hover {
+    background: #0f63bd;
+}
+
+/* ================== Success Message ================== */
+.att-success-box {
+    margin-top: 25px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #e8fff5;
+    border: 1px solid #34d399;
+    padding: 15px 20px;
+    border-radius: 12px;
+}
+
+.att-success-icon {
+    font-size: 32px;
+    color: #10b981;
+}
+
+.att-success-title {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.att-success-sub {
+    color: #4b5563;
+}
+
+/* ----- REMOVE ALL VIDEO BORDERS ----- */
+.att-camera-wrapper video {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background: #000 !important;
+}
+
+/* ----- TITLE BELOW VIDEO ----- */
+.att-box-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 10px;
+    color: #111;
+}
+
+/* ----- SUBTEXT ----- */
+.att-box-sub {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* ----- BLUE BUTTON ----- */
+.att-start-btn {
+    width: 100%;
+    max-width: 360px;
+    margin: 10px auto 0;
+    display: block;
+    background: linear-gradient(135deg, #4F46E5, #3B82F6);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 18px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 20px 40px rgba(79,70,229,0.25);
+    transition: 0.3s;
+}
+
+.att-start-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 50px rgba(79,70,229,0.35);
+}
+
+.att-active-dot {
+    width: 10px;
+    height: 10px;
+    background: #137fec;
+    border-radius: 50%;
+    animation: blink 1s infinite;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+@keyframes blink {
+    0% { opacity: 1 }
+    50% { opacity: 0 }
+    100% { opacity: 1 }
+}
+
+/* ===== CENTER SUCCESS POPUP ===== */
+.att-success-box {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+
+    background: #e8fff5;
+    border: 1px solid #34d399;
+    padding: 22px 28px;
+    border-radius: 14px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    animation: popIn 0.3s ease-out;
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* ===== APP POPUP ===== */
+.app-popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.app-popup.hidden {
+    display: none;
+}
+
+.app-popup-box {
+    background: white;
+    padding: 26px 32px;
+    border-radius: 16px;
+    text-align: center;
+    min-width: 280px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    animation: popupScale 0.25s ease-out;
+}
+
+.app-popup-icon {
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+.app-popup-box.success .app-popup-icon {
+    color: #10b981;
+}
+
+.app-popup-box.error .app-popup-icon {
+    color: #ef4444;
+}
+
+.app-popup-text {
+    font-size: 17px;
+    font-weight: 600;
+    color: #111;
+}
+
+@keyframes popupScale {
+    from {
+        transform: scale(0.85);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.att-lecture-card {
+    border-radius: 32px;
+}
+
+.att-active-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: #eef2ff;
+    color: #4F46E5;
+    padding: 6px 14px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.att-input-wrapper {
+    width: 100%;
+    max-width: 360px;   /* controls width */
+    margin: 12px auto;  /* centers it */
+}
+
+#classCodeInput {
+    width: 100%;
+    padding: 16px 18px;
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background: white;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+#classCodeInput:focus {
+    border-color: #4F46E5;
+    outline: none;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 2px solid transparent;
+    background: white;
+    font-size: 14px;
+}
+
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const video = document.getElementById("video");
+const captureBtn = document.getElementById("captureBtn");
+const classInput = document.getElementById("classCodeInput");
+
+let streamStarted = false;
+
+captureBtn.onclick = async function (e) {
+  e.preventDefault();
+  e.stopPropagation();
+
+  const code = classInput.value.trim();
+  if (!code) {
+    alert("Enter class code first");
+    return;
+  }
+
+  /* 🔥 STEP 1 — START CAMERA FIRST (USER GESTURE SAFE) */
+  if (!streamStarted) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      video.srcObject = stream;
+      await video.play();
+      streamStarted = true;
+      console.log("🎥 CAMERA STARTED");
+    } catch (err) {
+      alert("Camera permission denied");
+      console.error(err);
+      return;
+    }
+  }
+
+  /* 🔥 STEP 2 — VERIFY CLASS CODE */
+  const res = await fetch("/verify_class_code", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      admin_id: "{{ admin_id }}",
+      course: "{{ course }}",
+      class_key: "{{ class_key }}",
+      subject: "{{ current_lecture.subject if current_lecture else '' }}",
+      class_code: code
+    })
+  });
+
+  const data = await res.json();
+
+  console.log("VERIFY DATA:", data);
+
+  if (!data.ok) {
+    alert(data.msg);
+    return;
+  }
+
+  console.log("✅ Class verified");
+  await captureAndSubmit();
+
+  /* 🔥 STEP 3 — UPDATE UI */
+  document.getElementById("att-status-text").innerText = "Attendance Active";
+  document.getElementById("att-status-text").style.color = "#137fec";
+  document.getElementById("att-active-dot").style.display = "inline-block";
+  document.getElementById("att-subject").innerText = data.subject;
+  document.getElementById("att-teacher").innerText = data.teacher;
+};
+</script>
+
+<script>
+const canvas = document.getElementById("canvas");
+const capturedInput = document.getElementById("captured_image");
+
+
+/* 🔥 STEP 4 — AUTO CAPTURE + SUBMIT */
+async function captureAndSubmit() {
+
+    // 🔥 FORCE FRESH FRAME
+    video.pause();
+    await video.play();
+
+    const form = document.getElementById("attendanceForm");
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    capturedInput.value = canvas.toDataURL("image/jpeg");
+
+    console.log("📸 Image captured, submitting attendance");
+
+    // 🔥 EXACT FIX
+    const formData = new FormData(form);
+
+    const response = await fetch(window.location.pathname, {
+        method: "POST",
+        body: formData
+    });
+
+    // 🔥 BACKEND RETURNS HTML, NOT JSON
+    const contentType = response.headers.get("content-type");
+
+    // 🔥 CASE 1 — JSON (already marked, error, etc.)
+    if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        showPopup(data.msg, data.ok ? "success" : "error");
+        return;
+    }
+
+    // 🔥 CASE 2 — HTML (first successful attendance)
+    const html = await response.text();
+    document.open();
+    document.write(html);
+    document.close();
+
+    // disable button
+    const btn = document.getElementById("captureBtn");
+    btn.disabled = true;
+    btn.innerText = "Attendance Marked";
+    btn.style.background = "#9ca3af";
+    btn.style.cursor = "not-allowed";
+
+
+}
+
+
+</script>
+
+<script>
+const successBox = document.getElementById("successBox");
+
+if (successBox) {
+    setTimeout(() => {
+        successBox.style.display = "none";
+    }, 3000);
+}
+</script>
+
+<script>
+function showPopup(message, type) {
+    const popup = document.getElementById("appPopup");
+    const box = document.getElementById("appPopupBox");
+    const text = document.getElementById("popupText");
+    const icon = document.getElementById("popupIcon");
+
+    text.innerText = message;
+
+    if (type === "success") {
+        box.className = "app-popup-box success";
+        icon.innerText = "✔";
+    } else {
+        box.className = "app-popup-box error";
+        icon.innerText = "✖";
+    }
+
+    popup.classList.remove("hidden");
+
+    setTimeout(() => {
+        popup.classList.add("hidden");
+    }, 3000);
+}
+</script>
+
+<script>
+window.onload = () => {
+    const btn = document.getElementById("captureBtn");
+    if (btn) {
+        btn.disabled = false;
+        btn.innerText = "Start Face Recognition";
+        btn.style.background = "#137fec";
+        btn.style.cursor = "pointer";
+    }
+};
+</script>
+
+{% endblock %}

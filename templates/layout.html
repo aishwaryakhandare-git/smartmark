@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}SmartMark{% endblock %}</title>
+<style>
+  body {
+    margin:0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg,#eaeaf0, #6265b8);
+    color:#333;
+    text-align:center;
+  }
+
+  /* Navbar */
+  nav {
+    width: 100%;
+    background: rgba(255,255,255,0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 50px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  nav .brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(90deg,#ff4e50,#8e2de2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  nav .nav-links a {
+    margin-left: 30px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+  nav .nav-links a:hover, nav .nav-links a.active {
+    color: #1a237e;
+    border-bottom: 3px solid #1a237e;
+  }
+
+  .content {
+    padding-top: 30px;
+  }
+
+  /* Buttons styling (for Login page) */
+  .buttons a button {
+    padding: 15px 40px;
+    font-size:1.2rem;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    transition:0.3s;
+    color:white;
+    margin: 5px;
+  }
+
+  .admin-btn {background:#5c7aea;}
+  .teacher-btn {background:#8e44ad;}
+  .student-btn {background:#f39c12;}
+
+  .buttons a button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav>
+  <div class="brand">SmartMark</div>
+  <div class="nav-links">
+    <a href="{{ url_for('home') }}" class="{% if active=='home' %}active{% endif %}">Home</a>
+    <a href="{{ url_for('feature') }}" class="{% if active=='feature' %}active{% endif %}">Feature</a>
+    <a href="{{ url_for('about') }}" class="{% if active=='about' %}active{% endif %}">About</a>
+    <a href="{{ url_for('login') }}" class="{% if active=='login' %}active{% endif %}">Login</a>
+    <a href="{{ url_for('dashboard') }}" class="{% if active=='dashboard' %}active{% endif %}">Dashboard</a>
+    <a href="{{ url_for('help') }}" class="{% if active=='help' %}active{% endif %}">Help</a>
+  </div>
+</nav>
+
+<!-- Page Content -->
+<div class="content">
+  {% block content %}
+  {% endblock %}
+</div>
+
+</body>
+</html>

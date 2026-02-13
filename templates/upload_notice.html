@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Announcement - SmartMark</title>
+
+<style>
+/* GLOBAL */
+body {
+    font-family: 'Lexend', sans-serif;
+    background: #F4F7F9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* HEADER */
+h1 {
+    font-size: 32px;
+    font-weight: 900;
+    margin-bottom: 6px;
+}
+
+.subtitle {
+    color: #777;
+    margin-bottom: 30px;
+}
+
+/* LAYOUT */
+.flex {
+    display: flex;
+    gap: 32px;
+}
+
+@media (max-width: 1024px) {
+    .flex {
+        flex-direction: column;
+    }
+}
+
+
+/* FORM CARD */
+.card {
+    flex: 1;
+    background: #fff;
+    border: 1px solid #e7edf3;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+.card h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* INPUT FIELDS */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #e7edf3;
+    background: #f9fbfd;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus, textarea:focus {
+    border-color: #4A90E2;
+}
+
+textarea {
+    min-height: 140px;
+}
+
+/* BUTTONS */
+button {
+    background: #4A90E2;
+    color: white;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #3a7ccc;
+}
+
+.back-btn {
+    margin-top: 18px;
+    display: inline-block;
+    background: #222;
+    padding: 10px 22px;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.back-btn:hover {
+    background: #444;
+}
+
+/* FLASH MESSAGE */
+.flash-message {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 320px;
+    background: #fff;
+    border: 1px solid #e7edf3;
+    border-radius: 16px;
+    padding: 20px;
+    height: fit-content;
+}
+
+.sidebar h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.sidebar label {
+    font-size: 14px;
+    color: #777;
+}
+
+.sidebar input,
+.sidebar select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #e7edf3;
+    border-radius: 6px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+}
+
+.sidebar button {
+    width: 100%;
+    padding: 12px;
+    background: #4A90E2;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.sidebar button:hover {
+    background: #3a7ccc;
+}
+
+.view-all-box {
+    background: #eef4ff;
+    border: 1px solid #d2e0ff;
+    border-radius: 12px;
+    padding: 18px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.view-all-box:hover {
+    background: #dce8ff;
+}
+
+.view-all-box h4 {
+    margin: 0 0 6px 0;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a4db8;
+}
+
+.view-all-box p {
+    margin: 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.card select {
+    width: 20%;
+    padding: 16px;   /* increased from 12px → bigger height */
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid #e7edf3;
+    background: #f9fbfd;
+    font-size: 16px;  /* optional: makes text bigger */
+    outline: none;
+    cursor: pointer;
+    height: 55px;     /* NEW: fixed height → larger box */
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>New Announcement</h1>
+    <p class="subtitle">Create a new notice for teachers and students.</p>
+
+    <div class="flex">
+
+        <!-- LEFT: Create Announcement -->
+        <div class="card">
+            <h2>🆕 Create Announcement</h2>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% for category, message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('upload_notice_admin') }}">
+    
+                <input type="text" name="title" placeholder="Enter Notice Title" required>
+
+                <textarea name="body" placeholder="Write your announcement here..." required></textarea>
+
+                <!-- AUDIENCE SELECTION FOR POSTING -->
+                <label>Send To</label>
+                <select name="audience" required>
+                    <option value="teachers">Teachers Only</option>
+                    <option value="students">Students Only</option>
+                    <option value="both" selected>Both</option>
+                </select>
+
+                <input type="hidden" name="status" value="published">
+
+                <button type="submit">Post Announcement</button>
+            </form>
+
+            <a href="{{ url_for('admin_dashboard') }}" class="back-btn">⬅ Back</a>
+        </div>
+
+        <!-- RIGHT: Sidebar -->
+        <div class="sidebar">
+            <h3>Search & Filter</h3>
+
+            <form method="GET" action="{{ url_for('admin_announcements') }}">
+
+                <label>Search by keyword</label>
+                <input type="text" name="search" placeholder="Exam, meeting..." value="{{ request.args.get('search','') }}">
+
+                <label>Date Range</label>
+                <select name="date_range">
+                    <option value="">All Time</option>
+                    <option value="7">Last 7 Days</option>
+                    <option value="30">Last 30 Days</option>
+                    <option value="month">This Month</option>
+                    <option value="year">This Year</option>
+                </select>
+
+                <button type="submit">Apply Filters</button>
+            </form>
+            <!-- VIEW ALL NOTICES BOX -->
+            <div class="view-all-box" onclick="location.href='{{ url_for('admin_announcements') }}'">
+                <h4>📄 View All Notices</h4>
+                <p>See all announcements posted</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

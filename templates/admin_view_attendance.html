@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Attendance - SmartMark</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background: #f6f6f8;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        position: relative;
+    }
+
+    /* Header */
+    h1 {
+        font-size: 32px;
+        font-weight: 800;
+        margin-bottom: 5px;
+    }
+
+    .sub {
+        color: #666;
+        margin-bottom: 25px;
+    }
+
+    /* Summary Cards */
+    .summary-box {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .summary-card {
+        flex: 1;
+        min-width: 240px;
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .summary-title {
+        font-size: 14px;
+        color: #777;
+    }
+
+    .summary-value {
+        font-size: 28px;
+        font-weight: 700;
+        margin-top: 5px;
+    }
+
+    /* Table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    th {
+        text-align: left;
+        background: #f0f2f5;
+        padding: 14px;
+        font-size: 14px;
+        border-bottom: 1px solid #ddd;
+        color: #555;
+    }
+
+    td {
+        padding: 14px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+    }
+
+    tr:hover {
+        background: #fafafa;
+    }
+
+    /* Status badges */
+    .badge {
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .regular { background: #d4f7d4; color: #1a7d1a; }
+    .risk { background: #ffeac2; color: #a66a00; }
+    .critical { background: #ffd6d6; color: #b80000; }
+
+    /* Buttons */
+    .action-btn {
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        border: none;
+        transition: 0.2s;
+    }
+
+    .view-btn { background: #e3e3e3; }
+    .edit-btn { background: #4a90e2; color: white; }
+    .delete-btn { background: #e94b4b; color: white; }
+
+    .action-btn:hover {
+        opacity: 0.85;
+    }
+
+    /* Back button */
+    .back-btn {
+        margin-top: 25px;
+        background: #4338ca;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .back-btn:hover {
+        opacity: 0.9;
+    }
+
+    /* Editable Input */
+    .edit-input {
+        width: 80px;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+    }
+
+    .student-name {
+        text-decoration: none;      /* ❌ removes underline */
+        color: #4f46e5;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .student-name:hover {
+        text-decoration: none;      /* ensure underline never appears */
+        color: #4338ca;
+    }
+
+    .arrow {
+        font-size: 12px;
+        transition: transform 0.2s ease;
+    }
+
+    /* Arrow rotates when row is open */
+    .arrow.open {
+        transform: rotate(180deg);
+    }
+
+    .top-bar {
+        position: absolute;
+        top: 40px;     /* same vertical position as teacher */
+        right: 0;      /* same horizontal position */
+    }
+
+</style>
+
+<script>
+    // Button cycle logic
+    function cycleAction(btn, sid) {
+        const mode = btn.getAttribute("data-mode");
+
+        if (mode === "view") {
+            btn.textContent = "Edit";
+            btn.className = "action-btn edit-btn";
+            btn.setAttribute("data-mode", "edit");
+
+            enableEditing(sid);
+
+        } else if (mode === "edit") {
+            btn.textContent = "Delete";
+            btn.className = "action-btn delete-btn";
+            btn.setAttribute("data-mode", "delete");
+
+        } else if (mode === "delete") {
+            if (confirm("Delete all attendance records for this student?")) {
+                window.location.href = "/delete_attendance/" + sid;
+            }
+
+            btn.textContent = "View";
+            btn.className = "action-btn view-btn";
+            btn.setAttribute("data-mode", "view");
+
+            disableEditing(sid);
+        }
+    }
+
+    function enableEditing(sid) {
+        document.querySelectorAll(".edit-" + sid).forEach(el => {
+            el.removeAttribute("readonly");
+            el.style.background = "#fff";
+            el.style.border = "1px solid #4a90e2";
+        });
+    }
+
+    function disableEditing(sid) {
+        document.querySelectorAll(".edit-" + sid).forEach(el => {
+            el.setAttribute("readonly", true);
+            el.style.background = "transparent";
+            el.style.border = "1px solid transparent";
+        });
+    }
+</script>
+
+<script>
+function toggleSubjects(studentId, course, classKey, el) {
+
+    const row = document.getElementById("subjects-" + studentId);
+    const content = document.getElementById("subjects-content-" + studentId);
+    const arrow = el.querySelector(".arrow");
+
+    if (row.style.display === "table-row") {
+        row.style.display = "none";
+        arrow.classList.remove("open");
+        return;
+    }
+
+    row.style.display = "table-row";
+    arrow.classList.add("open");
+    content.innerHTML = "<em>Loading subject-wise attendance...</em>";
+
+    fetch(`/admin/attendance/student/${course}/${classKey}/${studentId}`)
+        .then(res => res.json())
+        .then(data => {
+
+            if (Object.keys(data).length === 0) {
+                content.innerHTML = "<em>No subject-wise data found.</em>";
+                return;
+            }
+
+            let html = "<table style='width:100%; border-collapse:collapse'>";
+            html += "<tr><th>Subject</th><th>Present</th><th>Total</th><th>%</th></tr>";
+
+            for (let subject in data) {
+                html += `
+                    <tr>
+                        <td>${subject}</td>
+                        <td>${data[subject].present}</td>
+                        <td>${data[subject].total}</td>
+                        <td>${data[subject].percentage}%</td>
+                    </tr>
+                `;
+            }
+
+            html += "</table>";
+            content.innerHTML = html;
+        })
+        .catch(() => {
+            content.innerHTML = "<em>Error loading data</em>";
+        });
+}
+</script>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Attendance</h1>
+    <div class="sub">{{ course }} — {{ class_key }}</div>
+
+    <!-- Summary Cards -->
+    <div class="summary-box">
+
+        <div class="summary-card">
+            <div class="summary-title">Total Students</div>
+            <div class="summary-value">{{ table_data|length }}</div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-title">Average Attendance</div>
+            <div class="summary-value">
+                {{
+                    (table_data | map(attribute="percentage") | sum / (table_data|length))
+                    | round(2)
+                }}%
+            </div>
+        </div>
+
+        <div class="summary-card">
+            <div class="summary-title">Below 75%</div>
+            <div class="summary-value">
+                {{
+                    table_data | selectattr("percentage", "lt", 75) | list | length
+                }}
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Attendance Table -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Present</th>
+                <th>Absent</th>
+                <th>Total</th>
+                <th>%</th>
+                <th>Last Seen</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for s in table_data %}
+            <tr>
+                <!-- ✅ ID column -->
+                <td>{{ s.sid }}</td>
+
+                <!-- ✅ Name column -->
+                <td>
+                   <a href="javascript:void(0)"
+                    class="student-name"
+                    onclick="toggleSubjects('{{ s.sid }}', '{{ course }}', '{{ class_key }}', this)">
+                        {{ s.name }}
+                        <span class="arrow">▾</span>
+                    </a>
+                </td>
+
+                <td>
+                    <input class="edit-{{ s.sid }} edit-input" readonly value="{{ s.present }}">
+                </td>
+
+                <td>{{ s.absent }}</td>
+                <td>{{ s.total }}</td>
+                <td>{{ s.percentage }}%</td>
+                <td>{{ s.last_seen }}</td>
+
+                <td>
+                    {% if s.status == "Regular" %}
+                        <span class="badge regular">Regular</span>
+                    {% elif s.status == "At Risk" %}
+                        <span class="badge risk">At Risk</span>
+                    {% else %}
+                        <span class="badge critical">Critical</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    <button class="action-btn view-btn"
+                            data-mode="view"
+                            onclick="cycleAction(this, '{{ s.sid }}')">
+                        View
+                    </button>
+                </td>
+            </tr>
+
+            <tr id="subjects-{{ s.sid }}" style="display:none; background:#f9fafb;">
+                <td colspan="9">
+                    <div id="subjects-content-{{ s.sid }}">
+                        <em>Loading subject-wise attendance...</em>
+                    </div>
+                </td>
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ url_for('admin_select_attendance') }}" class="back-btn">← Back</a>
+
+</div>
+
+</body>
+</html>

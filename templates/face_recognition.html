@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Face Recognition - SmartMark{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin: 50px auto; text-align:center;">
+    <h1>Face Verification for {{ subject }}</h1>
+    <p>Please align your face in front of the webcam to mark attendance.</p>
+
+    <!-- Webcam Video -->
+    <video id="video" autoplay muted playsinline style="border-radius:10px; width:100%; max-width:400px; border:2px solid #6a11cb;"></video>
+    
+    <div style="margin-top:15px;">
+        <button id="verifyBtn" class="btn-primary">Verify & Mark Attendance</button>
+    </div>
+
+    <div id="verificationStatus" style="margin-top:15px; font-weight:bold;"></div>
+
+    <!-- Hidden form for POST submission to mark attendance -->
+    <form id="attendanceForm" method="POST" style="display:none;"></form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Load face-api.js -->
+<script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+<script>
+const video = document.getElementById("video");
+const verifyBtn = document.getElementById("verifyBtn");
+const verificationStatus = document.getElementById("verificationStatus");
+const form = document.getElementById("attendanceForm");
+
+// Student face encodings from backend
+const studentEncodings = {{ student_face_encodings|tojson }}; // Array of arrays
+let faceMatcher = null;
+
+// Start webcam
+async function startVideo() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+        video.srcObject = stream;
+    } catch (err) {
+        alert("Cannot access webcam: " + err);
+    }
+}
+
+// Load face-api.js models
+async function loadModels() {
+    const MODEL_URL = '/static/models';
+    await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+    await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+    await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+}
+
+// Initialize face matcher
+function initFaceMatcher() {
+    const labeledDescriptors = [
+        new faceapi.LabeledFaceDescriptors(
+            "Student",
+            studentEncodings.map(e => new Float32Array(e))
+        )
+    ];
+    faceMatcher = new faceapi.FaceMatcher(labeledDescriptors, 0.5);
+}
+
+// Detect and verify face
+async function verifyFace() {
+    const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions())
+                                   .withFaceLandmarks().withFaceDescriptor();
+    if (!detection) return false;
+    const bestMatch = faceMatcher.findBestMatch(detection.descriptor);
+    return bestMatch.label === "Student";
+}
+
+// On page load
+window.onload = async () => {
+    await loadModels();
+    initFaceMatcher();
+    startVideo();
+};
+
+// Verify & submit attendance
+verifyBtn.addEventListener("click", async () => {
+    verificationStatus.innerText = "Verifying...";
+    const verified = await verifyFace();
+
+    if (verified) {
+        verificationStatus.innerText = "Face verified successfully!";
+        // Submit POST to mark attendance
+        form.action = `/student/mark_attendance/{{ course }}/{{ class_key }}/{{ subject }}`;
+        form.submit();
+    } else {
+        verificationStatus.innerText = "Face verification failed. Try again.";
+    }
+});
+</script>
+{% endblock %}

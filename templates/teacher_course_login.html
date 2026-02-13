@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Course Access - SmartMark</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #eaeaf0, #6265b8); /* Lavender + Indigo */
+      color: #fff;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    input[type="password"] {
+      width: 100%;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      color: #fff;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+    .error {
+      color: #ff6961;
+      margin-top: 10px;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Enter Course Password</h1>
+    <form method="POST">
+      <input type="password" name="course_password" placeholder="Course Password" required>
+      <button type="submit">Access Course</button>
+    </form>
+    {% if error %}
+      <div class="error">{{ error }}</div>
+    {% endif %}
+  </div>
+</body>
+</html>

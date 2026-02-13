@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Semester - SmartMark</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f0f2f5; text-align:center; padding:50px; }
+    h2 { color:#4B0082; margin-bottom:30px; }
+    .semester-list { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+    a button {
+      padding:20px; min-width:120px; font-size:1.1rem; border:none; border-radius:12px; cursor:pointer; color:white;
+      background:linear-gradient(90deg,#6a11cb,#2575fc); transition:0.3s;
+    }
+    a button:hover { transform:scale(1.05); }
+  </style>
+</head>
+<body>
+  <h2>Select Semester for {{ class_id }}</h2>
+  <div class="semester-list">
+    {% for sem in semesters %}
+      <a href="{{ url_for('teacher_subjects', class_id=class_id, semester=sem) }}"><button>Semester {{ sem }}</button></a>
+    {% endfor %}
+  </div>
+</body>
+</html>

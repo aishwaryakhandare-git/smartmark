@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Attendance History - SmartMark{% endblock %}
+
+{% block content %}
+<div class="history-container">
+  <h2>📅 Attendance History for {{ subject_name }}</h2>
+
+  {% if history %}
+  <table class="history-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Marked At</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in history %}
+      <tr class="{% if record.status == 'Present' %}present{% else %}absent{% endif %}">
+        <td>{{ record.date }}</td>
+        <td>{{ record.status }}</td>
+        <td>{{ record.time }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="no-data">No attendance records available for this subject.</p>
+  {% endif %}
+
+  <div class="back-btn">
+    <button onclick="window.location.href='{{ url_for('view_attendance') }}'">⬅ Back to Attendance Summary</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.history-container {
+  max-width: 750px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+.history-table th, .history-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+.present {
+  background-color: #e8f7e4;
+  color: #1b5e20;
+}
+.absent {
+  background-color: #ffe4e4;
+  color: #b71c1c;
+}
+.no-data {
+  text-align: center;
+  color: #888;
+  font-size: 16px;
+  margin-top: 15px;
+}
+.back-btn {
+  text-align: center;
+  margin-top: 20px;
+}
+.back-btn button {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+</style>
+{% endblock %}

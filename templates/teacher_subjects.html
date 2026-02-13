@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Subject - SmartMark</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f0f2f5; text-align:center; padding:50px; }
+    h2 { color:#4B0082; margin-bottom:30px; }
+    .subject-list { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+    form button {
+      padding:20px; min-width:200px; font-size:1.1rem; border:none; border-radius:12px; cursor:pointer; color:white;
+      background:linear-gradient(90deg,#6a11cb,#2575fc); transition:0.3s;
+    }
+    form button:hover { transform:scale(1.05); }
+  </style>
+</head>
+<body>
+  <h2>Subjects for {{ class_id }} - Semester {{ semester }}</h2>
+  <div class="subject-list">
+    {% for subj in subjects %}
+      <form method="POST" action="{{ url_for('teacher_select_subject') }}">
+        <input type="hidden" name="subject" value="{{ subj }}">
+        <button type="submit">{{ subj }}</button>
+      </form>
+    {% endfor %}
+  </div>
+</body>
+</html>

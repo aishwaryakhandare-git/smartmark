@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% set active = "notices" %}
+{% block content %}
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body {
+    font-family: 'Inter', sans-serif;
+}
+.mesh-bg {
+    background:
+        radial-gradient(at 0% 0%, rgba(79,70,229,0.15), transparent 50%),
+        radial-gradient(at 100% 0%, rgba(20,184,166,0.15), transparent 50%);
+}
+.glass-card {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+</style>
+
+<div class="min-h-screen p-6 bg-slate-100">
+
+<div class="max-w-[1440px] mx-auto h-screen flex flex-col">
+
+<main class="flex-1 flex gap-6 min-h-0">
+
+<!-- LEFT PANEL -->
+<section class="w-[30%] flex flex-col gap-6">
+
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input id="searchInput"
+       class="w-full pl-12 pr-4 py-2.5 bg-white rounded-2xl shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none"
+       placeholder="Search notices..." type="text"/>
+</div>
+
+<div class="flex-1 overflow-y-auto space-y-4 pr-2">
+
+<div class="flex items-center justify-between px-1">
+<h2 class="text-sm font-bold uppercase tracking-wider text-slate-500">
+All Notices
+</h2>
+<span class="px-2.5 py-1 text-xs font-medium bg-slate-100 text-slate-600 rounded-full">
+{{ notices|length }} Total
+</span>
+</div>
+
+{% if notices %}
+{% for n in notices %}
+<a href="/student_notices?id={{ n.id }}" class="block">
+
+<article 
+class="notice-card bg-white rounded-2xl shadow-sm p-5
+{% if selected_notice and selected_notice.id == n.id %}
+ring-2 ring-indigo-500
+{% else %}
+ring-1 ring-slate-200
+{% endif %}
+hover:shadow-md transition-all group"
+
+data-title="{{ n.title }}"
+data-body="{{ n.body }}">
+
+<div class="flex justify-between items-start mb-2">
+<span class="text-[11px] font-semibold text-indigo-600">
+{{ n.timestamp }}
+</span>
+<span class="material-symbols-outlined opacity-0 group-hover:opacity-100 transition-opacity">
+chevron_right
+</span>
+</div>
+
+<h3 class="font-bold text-slate-900 mb-1">
+{{ n.title }}
+</h3>
+
+<p class="text-sm text-slate-500 line-clamp-1">
+{{ n.body[:120] }}...
+</p>
+
+</article>
+</a>
+{% endfor %}
+
+{% else %}
+<p class="text-slate-400">No notices available.</p>
+{% endif %}
+
+</div>
+</section>
+
+
+<!-- RIGHT PANEL -->
+<section class="flex-1">
+<div class="glass-card h-full rounded-2xl shadow-xl flex flex-col">
+
+{% if selected_notice %}
+<div class="p-6 flex-1 overflow-y-auto">
+
+<div class="flex flex-wrap gap-4 mb-8">
+
+<div class="flex items-center gap-2 px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-full">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+<span class="text-[11px] font-medium">
+Posted: {{ selected_notice.timestamp }}
+</span>
+</div>
+
+<div class="flex items-center gap-2 px-2.5 py-1 bg-teal-50 text-teal-600 rounded-full">
+<span class="material-symbols-outlined text-sm">groups</span>
+<span class="text-[11px] font-medium
+">
+Audience: {{ selected_notice.audience|capitalize }}
+</span>
+</div>
+
+<div class="flex items-center gap-2 px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full">
+<span class="material-symbols-outlined text-sm">person</span>
+<span class="text-[11px] font-medium">
+Posted by: {{ selected_notice.posted_by }}
+</span>
+</div>
+
+</div>
+
+<h2 class="text-3xl font-bold text-slate-900 mb-8">
+{{ selected_notice.title }}
+</h2>
+
+<div class="prose max-w-none text-slate-600">
+{{ selected_notice.body }}
+</div>
+
+</div>
+{% else %}
+<div class="flex items-center justify-center h-full text-slate-400">
+Select a notice to view details.
+</div>
+{% endif %}
+
+</div>
+</section>
+
+</main>
+
+<footer class="mt-8 flex justify-between items-center text-xs text-slate-400 font-medium">
+<p>© 2024 SmartMark Attendance Systems. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="hover:text-indigo-600" href="#">Support Center</a>
+<a class="hover:text-indigo-600" href="#">Terms of Service</a>
+<a class="hover:text-indigo-600" href="#">Privacy Policy</a>
+</div>
+</footer>
+
+</div>
+</div>
+
+<script>
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("input", function() {
+    const query = this.value.toLowerCase();
+    const cards = document.querySelectorAll(".notice-card");
+
+    cards.forEach(card => {
+        const title = card.dataset.title.toLowerCase();
+        const body = card.dataset.body.toLowerCase();
+
+        if (title.includes(query) || body.includes(query)) {
+            card.parentElement.style.display = "block";
+        } else {
+            card.parentElement.style.display = "none";
+        }
+    });
+});
+</script>
+
+{% endblock %}

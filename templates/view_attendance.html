@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}View Attendance - SmartMark{% endblock %}
+
+{% block content %}
+<div class="attendance-container">
+  <h2>📊 Your Attendance Summary</h2>
+  <table class="attendance-table">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Attended</th>
+        <th>Total</th>
+        <th>Percentage</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in attendance_summary %}
+      <tr class="{% if item.percent >= 75 %}high{% elif item.percent >= 50 %}medium{% else %}low{% endif %}">
+        <td>{{ item.subject }}</td>
+        <td>{{ item.attended }}</td>
+        <td>{{ item.total }}</td>
+        <td>{{ item.percent }}%</td>
+        <td>
+          <button 
+            onclick="window.location.href='{{ url_for('attendance_history', course=course_code, class_key=class_key, subject=item.subject) }}'"
+            class="view-btn">
+            View Details
+          </button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="back-btn">
+    <button onclick="window.location.href='{{ url_for('student_dashboard') }}'">⬅ Back to Dashboard</button>
+  </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<style>
+.attendance-container {
+  max-width: 850px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+.attendance-table th, .attendance-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+.high { background: #e8f7e4; }
+.medium { background: #fff7e0; }
+.low { background: #ffe4e4; }
+.view-btn {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+}
+.view-btn:hover {
+  opacity: 0.85;
+}
+.back-btn {
+  text-align: center;
+  margin-top: 20px;
+}
+.back-btn button {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+</style>
+{% endblock %}

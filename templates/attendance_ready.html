@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance Ready - {{ subject }}</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    text-align: center;
+    padding: 50px;
+  }
+  h1 { color: #4B0082; margin-bottom: 20px; }
+  p { font-size: 18px; margin-bottom: 30px; }
+  button {
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(90deg,#6a11cb,#2575fc);
+    color: white;
+    cursor: pointer;
+  }
+  button:hover { transform: scale(1.05); }
+</style>
+</head>
+<body>
+
+<h1>Attendance Ready for {{ subject }}</h1>
+<p>Click the button below when you are ready to mark your attendance via face recognition.</p>
+
+<form action="{{ url_for('student_attendance', course=session['course'], subject=subject) }}" method="GET">
+  <button type="submit">Start Attendance</button>
+</form>
+
+</body>
+</html>

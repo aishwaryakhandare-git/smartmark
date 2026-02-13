@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - {{ course.name }}</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+    color: #333;
+  }
+  header {
+    background: #6a11cb;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  main {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+  }
+  h2 {
+    color: #4B0082;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #4B0082;
+    padding-bottom: 5px;
+  }
+  .section {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  }
+  .class-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  .class-card {
+    flex: 1 1 250px;
+    background: #f0e6ff;
+    border-radius: 12px;
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #4B0082;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .subject-card {
+    width: 100%;
+    background: #dcd6ff;
+    margin-top: 10px;
+    padding: 8px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .subject-card input[type="password"] {
+    width: 90%;
+    padding: 6px;
+    margin: 6px 0;
+    border-radius: 6px;
+    border: 1px solid #aaa;
+  }
+  .subject-card button {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #6a11cb;
+    color: white;
+    cursor: pointer;
+    width: 90%;
+  }
+  .subject-card button:hover {
+    background: #2575fc;
+  }
+  .add-subject-form {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin-top: 10px;
+  }
+  .add-subject-form input[type="text"] {
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+  }
+  .add-subject-form button {
+    padding: 8px 0;
+    border-radius: 6px;
+    border: none;
+    background: #6a11cb;
+    color: white;
+    cursor: pointer;
+  }
+  .flash-message { 
+      margin-bottom: 15px; 
+      font-weight: bold; 
+      color: #00ff7f; 
+      text-align: center; 
+  }
+  .error-message { 
+      margin-bottom: 15px; 
+      font-weight: bold; 
+      color: #ff4b5c; 
+      text-align: center; 
+  }
+</style>
+
+<script>
+  function setSubjectPassword(courseKey, classKey, subjectName){
+    const pwd = prompt("Enter Subject Password for " + subjectName + ":");
+    if(pwd){
+      fetch("/set_subject_password", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `course_key=${courseKey}&class_key=${classKey}&subject_name=${subjectName}&password=${pwd}`
+      })
+      .then(response => {
+        if(response.ok){
+          alert("Password set successfully!");
+          location.reload();
+        } else {
+          alert("Error setting password!");
+        }
+      });
+    }
+  }
+
+  window.onload = function() {
+    const flash = document.querySelector(".flash-message");
+    if(flash){
+      setTimeout(() => { flash.style.display = "none"; }, 3000);
+    }
+    const error = document.querySelector(".error-message");
+    if(error){
+      setTimeout(() => { error.style.display = "none"; }, 3000);
+    }
+  }
+</script>
+
+</head>
+<body>
+<header>
+  Admin Dashboard - {{ course.name }}
+</header>
+
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="{{ 'flash-message' if category == 'success' else 'error-message' }}">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="section">
+    <h2>Classes</h2>
+    <div class="class-list">
+      {% for class_key, class_info in course.classes.items() %}
+      <div class="class-card">
+        <div>{{ class_info.display_name }}</div>
+
+        <!-- Add Subject Form -->
+        <form method="POST" class="add-subject-form">
+          <input type="hidden" name="class_key" value="{{ class_key }}">
+          <input type="text" name="subject" placeholder="Enter Subject Name" required>
+          <button type="submit">Add Subject</button>
+        </form>
+
+        <!-- Subjects for this class -->
+        {% for sub_name, sub_info in class_info.subjects.items() %}
+        <div class="subject-card">
+          <div>{{ sub_name }}</div>
+          <button type="button" onclick="setSubjectPassword('{{ course_key }}','{{ class_key }}','{{ sub_name }}')">Set Subject Password</button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+</body>
+</html>

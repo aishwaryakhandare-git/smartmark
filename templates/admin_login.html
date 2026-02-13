@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - SmartMark</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #eaeaf0, #6265b8);
+      color: #333;
+    }
+
+    .container {
+      background: white;
+      padding: 40px 50px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      width: 400px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      color: #4B0082;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 15px 30px;
+      background: linear-gradient(90deg,#6a11cb,#2575fc);
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .flash-message {
+      color: red;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Login</h1>
+
+    <!-- Flash messages from Flask -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin_login') }}">
+      <input type="password" name="password" placeholder="Enter Admin Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</body>
+</html>

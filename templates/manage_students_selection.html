@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Course/Class - SmartMark</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f8f9fa; }
+    h1 { text-align:center; }
+    .card { padding:20px; margin:15px; background:#c5ddf5; border-radius:12px; display:inline-block; cursor:pointer; }
+    .card:hover { background:#a3c4f5; }
+  </style>
+</head>
+<body>
+<h1>Select Course & Class</h1>
+
+{% if courses %}
+    {% for course_code, course_data in courses.items() %}
+        <h2>{{ course_data.get('name', course_code) }}</h2>
+        {% for class_key, class_data in course_data.get('classes', {}).items() %}
+            <div class="card" onclick="location.href='{{ url_for('manage_students', course_code=course_code, class_key=class_key) }}'">
+                {{ class_data.get('display_name', class_key) }} ({{ class_data.get('students', {})|length }} Students)
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% else %}
+    <p>No courses found. Create a course first.</p>
+{% endif %}
+
+</body>
+</html>

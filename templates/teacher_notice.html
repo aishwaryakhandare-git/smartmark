@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Announcement</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* ----------- GLOBAL ----------- */
+body {
+    margin: 0;
+    padding: 0;
+    background: #f8fafc;
+    font-family: "Inter", sans-serif;
+    color: #1e293b;
+}
+
+.container {
+    max-width: 1250px;
+    margin: auto;
+    padding: 30px;
+}
+
+/* ----------- PAGE HEADER ----------- */
+.page-header h1 {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.page-header p {
+    color: #475569;
+    margin-bottom: 30px;
+}
+
+/* ----------- GRID ----------- */
+.grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+}
+
+/* ----------- CARD ----------- */
+.card {
+    background: white;
+    padding: 28px;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+/* ----------- ADMIN ANNOUNCEMENTS ----------- */
+.section-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.section-top h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.section-top a {
+    font-size: 14px;
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.announcement-box {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.announcement-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.announcement-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.announcement-header span {
+    font-size: 12px;
+    color: gray;
+}
+
+.announcement-box p {
+    font-size: 14px;
+    color: #475569;
+}
+
+/* ----------- CREATE ANNOUNCEMENT ----------- */
+.badge-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.badge {
+    background: #dbeafe;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: #3b82f6;
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.create-card h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* ----------- FORM FIELDS ----------- */
+input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    background: #f1f5f9;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+/* ----------- BUTTONS ----------- */
+.button-row {
+    display: flex;
+    gap: 15px;
+}
+
+.post-btn {
+    background: #3b82f6;
+    color: white;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.post-btn:hover {
+    background: #2563eb;
+}
+
+.back-btn {
+    background: #1e293b;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.back-btn:hover {
+    background: #0f172a;
+}
+
+/* ----------- RIGHT FILTER CARD ----------- */
+.filter-card h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.filter-card label {
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: block;
+    font-weight: 500;
+}
+
+.apply-btn {
+    width: 100%;
+    background: #3b82f6;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.apply-btn:hover {
+    background: #2563eb;
+}
+
+/* ----------- RESPONSIVE ----------- */
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <h1>New Announcement</h1>
+        <p>Create a new notice for students.</p>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid">
+
+        <!-- LEFT SIDE -->
+        <div>
+
+            <!-- Admin Announcements -->
+            <div class="card">
+                <div class="section-top">
+                    <h2>Admin Announcements</h2>
+                    <a href="#">View All</a>
+                </div>
+
+                {% if admin_notices %}
+                    {% for n in admin_notices %}
+                    <div class="announcement-box">
+                        <div class="announcement-header">
+                            <h3>{{ n.title }}</h3>
+                            <span>{{ n.timestamp }}</span>
+                        </div>
+                        <p>{{ n.body }}</p>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color:#6b7280; font-size:14px;">No admin announcements available.</p>
+                {% endif %}
+
+            </div>
+
+            <!-- Create Announcement -->
+            <div class="card create-card">
+                <div class="badge-row">
+                    <span class="badge">NEW</span>
+                    <h2>Create Announcement</h2>
+                </div>
+
+                <form action="{{ url_for('upload_notice_teacher') }}" method="POST">
+                    <input type="text" name="title" placeholder="Enter Notice Title" required>
+
+                    <!-- important: name must be 'body' -->
+                    <textarea name="body" rows="8" placeholder="Write your announcement here..." required></textarea>
+
+                    <div class="button-row">
+                        <button type="submit" class="post-btn">Post Announcement</button>
+                        <button type="button" class="back-btn" onclick="history.back()">Back</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <aside>
+            <div class="card filter-card">
+                <h3>Search & Filter</h3>
+
+                <form method="GET" action="{{ url_for('teacher_notice') }}">
+
+                    <label>Search by keyword</label>
+                    <input type="text" name="search" placeholder="Exam, meeting..." value="{{ request.args.get('search','') }}">
+
+                    <label>Date Range</label>
+                    <select name="date_range">
+                        <option value="">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+
+                    <button class="apply-btn" type="submit">Apply Filters</button>
+
+                </form>
+            </div>
+
+            <!-- TEACHER'S ANNOUNCEMENTS LIST -->
+            <div class="card" style="margin-top:20px;">
+                <h3 style="margin-bottom:15px;">Your Announcements</h3>
+
+                {% if teacher_notices %}
+                    {% for n in teacher_notices %}
+                    <div style="
+                        border:1px solid #e2e8f0;
+                        background:#f8fafc;
+                        border-radius:10px;
+                        padding:14px;
+                        margin-bottom:12px;">
+
+                        <div style="font-size:12px; color:#6b7280;">
+                            {{ n.timestamp }}
+                        </div>
+
+                        <div style="font-size:16px; font-weight:600; margin:6px 0;">
+                            {{ n.title }}
+                        </div>
+
+                        <p style="font-size:14px; color:#475569; margin:6px 0;">
+                            {{ n.body[:80] }}...
+                        </p>
+
+                        <form method="POST" action="{{ url_for('delete_teacher_notice', notice_id=n.id) }}">
+                            <button style="
+                                background:#ef4444;
+                                color:white;
+                                border:none;
+                                padding:6px 12px;
+                                border-radius:6px;
+                                cursor:pointer;">
+                                Delete
+                            </button>
+                        </form>
+
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="font-size:14px; color:#6b7280;">No announcements posted yet.</p>
+                {% endif %}
+            </div>
+
+        </aside>
+
+    </div>
+</div>
+
+</body>
+</html>

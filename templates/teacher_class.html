@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Class - SmartMark</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg,#eaeaf0,#6265b8); /* Lavender theme */
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+      min-height: 100vh;
+    }
+    h2 {
+      color: #fff;
+      margin-bottom: 40px;
+      font-size: 2rem;
+    }
+    .class-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+      justify-content: center;
+    }
+    .course-card {
+      background: rgba(255,255,255,0.1);
+      padding: 25px;
+      border-radius: 20px;
+      min-width: 180px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+    .course-card:hover {
+      transform: scale(1.05);
+    }
+    .course-name {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .course-buttons button {
+      padding: 12px 18px;
+      margin: 6px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(90deg,#6a11cb,#2575fc);
+      transition: 0.3s;
+    }
+    .course-buttons button:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <h2>Select a Class</h2>
+  <div class="class-list">
+    {% for course in courses %}
+    <div class="course-card">
+      <div class="course-name">{{ course }}</div>
+      <div class="course-buttons">
+        {% for cls in ['FY','SY','TY'] %}
+          <form method="GET" action="{{ url_for('teacher_semester', class_id=cls + course) }}" style="display:inline;">
+            <button type="submit">{{ cls }}</button>
+          </form>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

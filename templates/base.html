@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SmartMark{% endblock %}</title>
+  <!-- ✅ REQUIRED FOR ICONS LIKE school, auto_stories, calendar_month -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined">
+  <style>
+    html, body {
+      height: 100%;
+      overflow-y: scroll !important;
+  }
+
+    /* NEW — Add this right before body */
+    html {
+      height: 100%;
+      overflow-y: scroll;   /* keeps scrollbar always visible → no navbar shifting */
+    }
+
+    /* NEW — Replace your old single-line body */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      min-height: 100%;
+    }
+
+    header { background: linear-gradient(135deg,#6a11cb,#2575fc); color:white; padding:20px; text-align:center; font-size:1.3rem; font-weight:bold; box-shadow:0 4px 15px rgba(0,0,0,0.2);}
+    /* Remove page container rounding that causes navbar curves */
+    .sp-page,
+    .sp-main,
+    .container,
+    body > div,
+    body > main,
+    body > section {
+        border-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    header small { display:block; font-weight:normal; font-size:0.9rem; margin-top:5px; }
+
+    .container { max-width:1000px; margin:20px auto 80px; padding:0 15px; }
+
+    .attendance-summary { margin-bottom:30px; padding:20px; border-radius:15px; background:#fff; box-shadow:0 4px 10px rgba(0,0,0,0.1); }
+    .attendance-summary h3 { margin-bottom:15px; color:#333; }
+    .subjects-list { display:flex; gap:15px; flex-wrap:wrap; justify-content:center; }
+    .subject-card {
+      border-radius:12px; padding:20px; width:160px; text-align:center; color:white;
+      box-shadow:0 4px 10px rgba(0,0,0,0.15); transition:transform 0.2s, box-shadow 0.2s;
+    }
+    .subject-card:hover { transform:translateY(-5px); box-shadow:0 6px 15px rgba(0,0,0,0.2); }
+    .subject-card h4 { margin:0 0 10px 0; font-size:18px; }
+    .subject-card p { margin:0; font-size:16px; }
+    .progress-container { background: rgba(255,255,255,0.3); border-radius: 10px; height: 12px; margin-top:10px; overflow:hidden; }
+    .progress-bar { height: 100%; border-radius:10px; transition: width 0.5s ease; }
+
+    .high { background: linear-gradient(135deg, #00c853, #b2ff59); }
+    .medium { background: linear-gradient(135deg, #ffab00, #ffc107); }
+    .low { background: linear-gradient(135deg, #d50000, #ff1744); }
+
+    .card-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:20px; margin-bottom:40px; }
+    .card { background:white; padding:25px 15px; border-radius:15px; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.1); transition:transform 0.2s, box-shadow 0.2s; cursor:pointer; position:relative; }
+    .card:hover { transform:translateY(-5px); box-shadow:0 8px 18px rgba(0,0,0,0.15); }
+    .card img { width:40px; margin-bottom:10px; }
+    .card h3 { margin:5px 0; font-size:1rem; font-weight:600; color:#333; }
+
+    button { cursor:pointer; border:none; border-radius:8px; padding:8px 12px; background:#6a11cb; color:white; margin-top:10px; transition:0.3s; }
+    button:hover { transform:scale(1.05); }
+    button:disabled { opacity:0.6; cursor:not-allowed; }
+
+    .portion-history { max-height:200px; overflow-y:auto; background:#f0f0f0; border-radius:10px; padding:10px; margin-top:10px; }
+    .portion-entry { padding:5px; border-bottom:1px solid #ddd; }
+
+    video { border-radius:10px; width:100%; max-width:400px; height:auto; border:2px solid #6a11cb; margin-bottom:10px; }
+    .captured-preview { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:10px; }
+    .captured-preview img { width:80px; height:60px; object-fit:cover; border-radius:6px; border:2px solid #6a11cb; }
+
+    .alert-warning { background:#fff3cd; color:#856404; border:1px solid #ffeeba; padding:10px; margin-bottom:15px; border-radius:6px; font-size:14px; }
+
+    .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: #ffffff;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        border-radius: 0 !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        overflow: hidden !important;
+        box-shadow: none !important;
+        border-top: 1px solid #ddd;
+    }
+
+    .bottom-nav a { text-decoration:none; color:#333; text-align:center; font-size:0.8rem; display:flex; flex-direction:column; align-items:center; }
+    .bottom-nav a.active { color:#6a11cb; font-weight:bold; }
+    .bottom-nav a img { width:24px; margin-bottom:2px; }
+
+    @media(max-width:768px){
+      .subjects-list { flex-direction: column; align-items:center; }
+      .subject-card { width:90%; }
+      .card-grid { grid-template-columns: repeat(auto-fit, minmax(120px,1fr)); }
+      .captured-preview img { width:60px; height:45px; }
+    }
+
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .video-overlay {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(2px);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; color: white; font-size: 1.2rem; font-weight: bold;
+      z-index: 2; text-align: center; border-radius: 10px;
+    }
+
+    .flash-messages .alert {
+      opacity: 0; transform: translateY(-20px);
+      animation: slideFadeIn 0.4s forwards;
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; font-size: 0.95rem;
+    }
+
+    .flash-messages .alert.success::before { content: "✔"; }
+    .flash-messages .alert.warning::before { content: "⚠️"; }
+    .flash-messages .alert.danger::before { content: "❌"; }
+
+    @keyframes slideFadeIn { to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    .flash-messages .alert:not(:last-child) { margin-bottom: 8px; }
+
+    /* REMOVE LEFT CURVE + REMOVE BOTTOM GAP */
+
+    /* Remove any overhanging rounded corners from parent containers */
+    header,
+    .container,
+    .sp-page,
+    .sp-main {
+        border-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        overflow: visible !important;
+    }
+
+    /* Prevent page from leaving whitespace below navbar */
+    html, body {
+        height: 100%;
+        background: #f5f5f5;
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    /* Remove rounding from last element on the page so navbar edge is straight */
+    body > *:last-child,
+    .container > *:last-child,
+    .sp-main > *:last-child,
+    .sp-page > *:last-child {
+        border-radius: 0 !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+        overflow: visible !important;
+    }
+   
+    /* Remove rounding from any main page container */
+    body > div:first-child {
+        border-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+    /* FIX: remove ALL rounding from the entire page content box */
+    .sp-page,
+    .sp-main,
+    .container,
+    body > div.sp-page {
+        border-radius: 0 !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .sp-page {
+        border-radius: 0 !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    /* NAVBAR ICON SIZE */
+    .bottom-nav .nav-icon {
+        width: 36px;   /* increase this */
+        height: 36px;  /* increase this */
+    }
+
+  </style>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+  
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages" style="max-width:600px;margin:15px auto;">
+        {% for category, message in messages %}
+          <div class="alert" style="
+            background: {{ 'linear-gradient(90deg,#4caf50,#81c784)' if category=='success'
+                         else 'linear-gradient(90deg,#ff5252,#ff867c)' if category=='danger'
+                         else 'linear-gradient(90deg,#ffb300,#ffe082)' }};
+            color:white; padding:10px 15px; border-radius:8px; margin-bottom:10px; text-align:center;
+            font-weight:500; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- ██████ THE ONLY CHANGE YOU REQUESTED ██████ -->
+  
+  {% block fullpage %}
+      {% block content %}{% endblock %}
+  {% endblock %}
+  {% block style %}{% endblock %}
+
+  
+  <!-- ████████████████████████████████████████████ -->
+
+  <div class="bottom-nav">
+    <a href="{{ url_for('student_dashboard') }}" class="{% if active=='home' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='Images/images/home.png') }}" class="nav-icon"><span>Home</span>
+    </a>
+    <a href="{{ url_for('schedule_attendance') }}" class="{% if active=='schedule' %}active{% endif %}">
+    <img src="{{ url_for('static', filename='Images/images/calendar.png') }}" class="nav-icon"><span>Schedule</span>
+    </a>
+
+    <a href="{{ url_for('student_attendance_redirect') }}" class="{% if active=='attendance' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='Images/images/check.png') }}" class="nav-icon">
+      <span>Attendance</span>
+    </a>
+
+    <a href="{{ url_for('student_notices') }}" class="{% if active=='notices' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='Images/images/notice.png') }}" class="nav-icon">
+      <span>Notices</span>
+    </a>
+    <a href="{{ url_for('student_profile') }}" class="{% if active=='profile' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='Images/images/profile.png') }}" class="nav-icon"><span>Profile</span>
+    </a>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      document.querySelectorAll(".flash-messages .alert").forEach(el => {
+        el.style.transition = "opacity 0.5s ease";
+        el.style.opacity = "0";
+        setTimeout(() => el.remove(), 500);
+      });
+    }, 3000);
+  </script>
+
+  {% block scripts %}{% endblock %}
+
+  <script>
+  window.onload = () => {
+    console.log("BODY CHILDREN:");
+    [...document.body.children].forEach((el, i) => {
+      console.log(i, el.tagName, el.className);
+    });
+  };
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ subject }} - Ready for Attendance</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 80px; /* consistent with dashboard */
+  }
+  h1 {
+    color: #4B0082;
+    margin-bottom: 15px;
+  }
+  p {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  .info-card {
+    background: #e6f7ff;
+    color: #00529B;
+    padding: 15px;
+    border-radius: 12px;
+    max-width: 500px;
+    margin: 0 auto 30px auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-weight: bold;
+  }
+  .btn {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    background: linear-gradient(135deg, #7f00ff, #e100ff);
+    transition: all 0.3s ease;
+    margin: 10px;
+  }
+  .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .btn-back {
+    background: #d9534f;
+  }
+
+  /* Optional: Water navigation like dashboard */
+  .water-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #4B0082;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 0;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.2);
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+  .water-nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    text-align: center;
+    flex: 1;
+  }
+  .water-nav a:hover { color: #FFD700; }
+  .water-nav i { display: block; font-size: 18px; margin-bottom: 4px; }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<h1>{{ subject }} - Attendance Ready</h1>
+
+<div class="info-card">
+  Course: {{ course_code }} | Class: {{ session['class'] }}
+</div>
+
+<p>You're all set to start the attendance for today's class. Please ensure your camera is on and face is clearly visible.</p>
+
+<a href="{{ url_for('start_attendance', subject=subject) }}" class="btn">▶ Start Attendance</a>
+<a href="{{ url_for('student_dashboard') }}" class="btn btn-back">⬅ Back to Dashboard</a>
+
+<!-- Optional: Water Navigation -->
+<div class="water-nav">
+  <a href="{{ url_for('student_profile', update=True) }}"><i class="fas fa-user"></i>Profile</a>
+  <a href="{{ url_for('student_dashboard') }}"><i class="fas fa-calendar-check"></i>Attendance</a>
+  <a href="{{ url_for('student_dashboard') }}#notices"><i class="fas fa-bullhorn"></i>Notices</a>
+  <a href="{{ url_for('student_logout') }}"><i class="fas fa-sign-out-alt"></i>Logout</a>
+</div>
+
+</body>
+</html>
+

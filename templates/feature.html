@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Features | SmartMark</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<style>
+html {
+  overflow-y: scroll;
+}
+
+:root{
+  --primary:#2563eb;
+  --bg:#f8fafc;
+  --card:#ffffff;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Poppins,sans-serif;
+  background:var(--bg);
+  color:#0f172a;
+}
+
+/* CENTERED NAVBAR (MATCHES INDEX PAGE) */
+
+.navbar {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 4rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-left {
+  flex: 1;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #6366F1;
+}
+
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+}
+
+.nav-center a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #374151;
+  transition: color 0.3s ease;
+}
+
+.nav-center a:hover {
+  color: #6366F1;
+}
+
+.nav-center a.active {
+  color: #6366F1;
+  font-weight: 600;
+}
+
+.nav-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-btn {
+  background-color: #6366F1;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.6rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background-color: #4F46E5;
+  transform: translateY(-2px);
+}
+
+.page-wrapper{
+  max-width:1280px;
+  margin:40px auto;
+  padding:0 32px;
+}
+
+
+/* =========================
+   PAGE LAYOUT
+   ========================= */
+.container{
+  max-width:1300px;
+  margin:40px auto;
+  padding:0 24px;
+}
+
+.page-title h1{
+  font-size:36px;
+  font-weight:800;
+}
+
+.page-title p{
+  margin-top:8px;
+  color:var(--muted);
+  max-width:650px;
+}
+
+/* =========================
+   FEATURES LAYOUT
+   ========================= */
+.features{
+  margin-top:40px;
+  display:grid;
+  grid-template-columns:280px 1fr;
+  gap:40px;
+}
+
+/* LEFT MENU */
+.feature-menu{
+  background:#fff;
+  border-radius:20px;
+  padding:18px;
+  box-shadow:0 15px 40px rgba(0,0,0,.06);
+}
+
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:14px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:.25s;
+}
+
+.menu-item span{
+  background:#eef2ff;
+  color:var(--primary);
+  padding:10px;
+  border-radius:10px;
+}
+
+.menu-item.active{
+  border:2px solid rgba(37,99,235,.25);
+  box-shadow:0 8px 20px rgba(37,99,235,.15);
+}
+
+.menu-text h4{
+  font-size:15px;
+  font-weight:600;
+}
+
+.menu-text p{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* RIGHT PREVIEW */
+.preview{
+  background:#fff;
+  border-radius:26px;
+  padding:30px;
+  box-shadow:0 25px 60px rgba(0,0,0,.08);
+}
+
+.preview-panel{
+  display:none;
+}
+
+.preview-panel.active{
+  display:block;
+}
+
+.preview-header{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:26px;
+}
+
+.preview-header h3{
+  font-size:18px;
+}
+
+/* STATS */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:30px;
+}
+
+.stat{
+  background:#f1f5f9;
+  padding:16px;
+  border-radius:14px;
+}
+
+.stat p{
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:6px;
+}
+
+.stat h4{
+  font-size:15px;
+  font-weight:700;
+}
+
+/* CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:24px;
+}
+
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 12px 30px rgba(0,0,0,.06);
+}
+
+.card h4{
+  margin-bottom:14px;
+}
+
+/* =========================
+   EXTRA FEATURES SECTION
+   ========================= */
+.more-features{
+  margin-top:120px;
+  padding:80px 24px;
+  background:#ffffff;
+}
+
+.section-header{
+  text-align:center;
+  max-width:700px;
+  margin:0 auto 60px;
+}
+
+.section-header h2{
+  font-size:34px;
+  font-weight:800;
+}
+
+.section-header p{
+  margin-top:12px;
+  font-size:16px;
+  color:#6b7280;
+}
+
+.feature-grid{
+  max-width:1200px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:30px;
+}
+
+.feature-card{
+  background:#f8fafc;
+  border-radius:22px;
+  padding:30px;
+  box-shadow:0 15px 35px rgba(0,0,0,.06);
+  transition:.3s;
+}
+
+.feature-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 25px 50px rgba(0,0,0,.12);
+}
+
+.feature-card span{
+  font-size:36px;
+  color:#2563eb;
+  margin-bottom:14px;
+  display:inline-block;
+}
+
+.feature-card h3{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.feature-card p{
+  font-size:14px;
+  color:#475569;
+  line-height:1.6;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media(max-width:900px){
+  .features{
+    grid-template-columns:1fr;
+  }
+
+  .feature-grid{
+    grid-template-columns:1fr;
+  }
+}
+</style>
+
+</head>
+
+<body>
+
+<nav class="navbar">
+  <div class="nav-left">
+    <div class="logo">SmartMark</div>
+  </div>
+
+  <div class="nav-center">
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('feature') }}" class="active">Features</a>
+    <a href="{{ url_for('about') }}">About</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+  </div>
+
+  <div class="nav-right">
+    <button class="nav-btn">Get Started</button>
+  </div>
+</nav>
+
+<div class="page-wrapper">
+
+  <div class="page-title">
+    <h1>Platform Features Overview</h1>
+    <p>
+      SmartMark combines biometric authentication, automation and real-time analytics
+      to deliver a secure and seamless attendance management platform.
+    </p>
+  </div>
+
+  <div class="features">
+
+    <!-- LEFT MENU -->
+    <div class="feature-menu">
+      <div class="menu-item active" onclick="showFeature('bio',this)">
+        <span class="material-symbols-outlined">fingerprint</span>
+        <div class="menu-text">
+          <h4>Biometric Attendance</h4>
+          <p>AI-powered face verification</p>
+        </div>
+      </div>
+
+      <div class="menu-item" onclick="showFeature('admin',this)">
+        <span class="material-symbols-outlined">admin_panel_settings</span>
+        <div class="menu-text">
+          <h4>Admin Control</h4>
+          <p>Complete system management</p>
+        </div>
+      </div>
+
+      <div class="menu-item" onclick="showFeature('teacher',this)">
+        <span class="material-symbols-outlined">school</span>
+        <div class="menu-text">
+          <h4>Teacher Dashboard</h4>
+          <p>Live lecture & attendance</p>
+        </div>
+      </div>
+
+      <div class="menu-item" onclick="showFeature('student',this)">
+        <span class="material-symbols-outlined">person</span>
+        <div class="menu-text">
+          <h4>Student Portal</h4>
+          <p>Instant attendance feedback</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PREVIEW -->
+    <div class="preview">
+
+      <!-- BIOMETRIC -->
+      <div class="preview-panel active" id="bio">
+        <div class="preview-header">
+          <h3>Biometric Attendance</h3>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><p>Accuracy</p><h4>99%</h4></div>
+          <div class="stat"><p>Verification</p><h4>2 sec</h4></div>
+          <div class="stat"><p>Security</p><h4>High</h4></div>
+          <div class="stat"><p>Proxy</p><h4>Blocked</h4></div>
+        </div>
+
+        <div class="cards">
+          <div class="card">
+            <h4>Face Recognition Engine</h4>
+            <p>Advanced AI models ensure precise and fast attendance marking.</p>
+          </div>
+          <div class="card">
+            <h4>Live Status</h4>
+            <p>✔ Verified<br>✔ Secure</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN -->
+      <div class="preview-panel" id="admin">
+        <div class="preview-header"><h3>Admin Control Center</h3></div>
+        <div class="stats">
+          <div class="stat"><p>Courses</p><h4>Manage</h4></div>
+          <div class="stat"><p>Classes</p><h4>Schedule</h4></div>
+          <div class="stat"><p>Teachers</p><h4>Assign</h4></div>
+          <div class="stat"><p>Reports</p><h4>Export</h4></div>
+        </div>
+        <div class="cards">
+          <div class="card"><h4>Central Dashboard</h4><p>Full control from one secure panel.</p></div>
+          <div class="card"><h4>Automation</h4><p>Class codes & sessions auto-managed.</p></div>
+        </div>
+      </div>
+
+      <!-- TEACHER -->
+      <div class="preview-panel" id="teacher">
+        <div class="preview-header"><h3>Teacher Dashboard</h3></div>
+        <div class="stats">
+          <div class="stat"><p>Live Class</p><h4>Start</h4></div>
+          <div class="stat"><p>Students</p><h4>Tracked</h4></div>
+          <div class="stat"><p>Attendance</p><h4>Auto</h4></div>
+          <div class="stat"><p>History</p><h4>Saved</h4></div>
+        </div>
+        <div class="cards">
+          <div class="card"><h4>Real-time Presence</h4><p>Monitor attendance live.</p></div>
+          <div class="card"><h4>Session Logs</h4><p>Every lecture recorded.</p></div>
+        </div>
+      </div>
+
+      <!-- STUDENT -->
+      <div class="preview-panel" id="student">
+        <div class="preview-header"><h3>Student Portal</h3></div>
+        <div class="stats">
+          <div class="stat"><p>Status</p><h4>Present</h4></div>
+          <div class="stat"><p>Subjects</p><h4>Tracked</h4></div>
+          <div class="stat"><p>History</p><h4>Available</h4></div>
+          <div class="stat"><p>Alerts</p><h4>Enabled</h4></div>
+        </div>
+        <div class="cards">
+          <div class="card"><h4>Attendance Records</h4><p>View subject-wise logs.</p></div>
+          <div class="card"><h4>Performance</h4><p>Real-time insights.</p></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function showFeature(id, el){
+  document.querySelectorAll('.preview-panel')
+    .forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.menu-item')
+    .forEach(i=>i.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+
+<!-- EXTRA FEATURES SECTION -->
+<section class="more-features">
+
+  <div class="section-header">
+    <h2>Everything You Need for Smart Attendance</h2>
+    <p>
+      SmartMark is designed to automate attendance using AI,
+      while giving admins, teachers, and students a smooth experience.
+    </p>
+  </div>
+
+  <div class="feature-grid">
+
+    <div class="feature-card">
+      <span class="material-symbols-outlined">fingerprint</span>
+      <h3>AI Face Recognition</h3>
+      <p>
+        Advanced facial recognition ensures accurate attendance
+        and eliminates proxy or fake entries.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <span class="material-symbols-outlined">admin_panel_settings</span>
+      <h3>Admin Control Center</h3>
+      <p>
+        Centralized dashboard to manage courses, classes,
+        teachers, students, and attendance data.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <span class="material-symbols-outlined">school</span>
+      <h3>Teacher Dashboard</h3>
+      <p>
+        Teachers can start sessions, monitor live attendance,
+        view schedules, and access lecture history easily.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <span class="material-symbols-outlined">person</span>
+      <h3>Student Portal</h3>
+      <p>
+        Students can mark attendance using face scan,
+        view schedules, and track subject-wise attendance.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <span class="material-symbols-outlined">sync_alt</span>
+      <h3>Automated Workflow</h3>
+      <p>
+        Attendance flows seamlessly from admin setup
+        to teacher sessions and student verification.
+      </p>
+    </div>
+
+    <div class="feature-card">
+      <span class="material-symbols-outlined">security</span>
+      <h3>Secure & Reliable</h3>
+      <p>
+        Role-based access, Firebase backend,
+        encrypted data, and session-based security.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+</body>
+</html>

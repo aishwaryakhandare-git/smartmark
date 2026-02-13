@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enter Class Code - {{ course }} - {{ subject }}</title>
+<style>
+body { font-family: Arial, sans-serif; background: #f0f2f5; text-align: center; padding: 50px; }
+h1 { color: #4B0082; margin-bottom: 30px; }
+form { background: white; display: inline-block; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+input { padding: 10px; font-size: 1rem; margin-bottom: 15px; width: 200px; }
+button { padding: 10px 20px; font-size: 1rem; border: none; border-radius: 10px; background: linear-gradient(90deg,#6a11cb,#2575fc); color: white; cursor: pointer; }
+button:hover { transform: scale(1.05); }
+.message { color: red; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<h1>Enter Class Code - {{ course }} - {{ subject }}</h1>
+
+<form method="POST">
+  {% if message %}
+    <div class="message">{{ message }}</div>
+  {% endif %}
+  <input type="text" name="class_code" placeholder="Enter class code" required>
+  <br>
+  <button type="submit">Submit</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<style>
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
+}
+
+/* GLOBAL */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", Arial, sans-serif;
+  background: #f7f8fc;
+  color: #111418;
+}
+
+/* HEADER */
+.header-wrapper {
+  max-width: 1200px;
+  margin: 60px auto 0;
+  padding: 0 20px;
+}
+
+header {
+  background: linear-gradient(to bottom right, #f5f8ff, #eef2ff);
+  padding: 35px 40px;
+  border-radius: 22px;
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.header-title {
+  font-size: 38px;
+  font-weight: 900;
+  margin: 0;
+}
+
+.header-subtitle {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #637588;
+}
+
+.logout-btn {
+  position: absolute;
+  right: 35px;
+  top: 35px;
+  background: #ff4b5c;
+  border: none;
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ACTIVE SESSION BAR */
+#activeSessionBar {
+  display: none;
+  margin-top: 15px;
+  background: #ffffff;
+  padding: 18px 25px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.session-text {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.session-code {
+  font-size: 24px;
+  font-weight: 900;
+  color: #308ce8;
+}
+
+#timerDisplay {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.session-btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+}
+
+.extend-btn {
+  background: #34c759;
+}
+
+.end-btn {
+  background: #ff3b30;
+}
+
+/* ACTION CARDS */
+.actions-grid {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: nowrap;
+  margin-top: 60px;
+}
+
+.card {
+  width: 220px;
+  height: 300px;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+  transition: 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  margin: 0 auto 18px;
+}
+
+.open-btn {
+  background: #308ce8;
+  border: none;
+  padding: 7px 20px;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 20px;
+  cursor: pointer;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header-wrapper">
+<header>
+  <p class="header-title">Welcome, {{ teacher.name }}</p>
+  <p class="header-subtitle">Your classes, attendance and updates at a glance</p>
+
+  <form action="{{ url_for('teacher_logout') }}" method="get">
+    <button class="logout-btn">Logout</button>
+  </form>
+
+  <!-- SMALL HEADER SESSION BOX (appears only after clicking Start Attendance) -->
+  <div id="headerSessionBox" style="
+      display:none;
+      position:absolute;
+      right:160px;
+      top:35px;
+      background:white;
+      padding:12px 18px;
+      border-radius:12px;
+      box-shadow:0 4px 14px rgba(0,0,0,0.12);
+      display:flex;
+      align-items:center;
+      gap:18px;
+  ">
+
+      <!-- Class Code -->
+      <div>
+          <p style="margin:0; font-size:12px; color:#666;">Code</p>
+          <p id="hs_code"
+            style="margin:0; font-size:20px; font-weight:800; color:#308ce8;">
+            ------
+          </p>
+      </div>
+
+      <!-- Timer -->
+      <div>
+          <p style="margin:0; font-size:12px; color:#666;">Expires</p>
+          <p id="hs_timer"
+            style="margin:0; font-size:20px; font-weight:800;">
+            00:00
+          </p>
+      </div>
+
+      <!-- Buttons -->
+      <button id="hs_extend" style="
+          background:#34c759;
+          border:none;
+          padding:6px 12px;
+          border-radius:8px;
+          color:white;
+          cursor:pointer;
+      ">+5</button>
+
+      <button id="hs_end" style="
+          background:#ff3b30;
+          border:none;
+          padding:6px 12px;
+          border-radius:8px;
+          color:white;
+          cursor:pointer;
+      ">End</button>
+  </div>
+
+  </div>
+
+</header>
+</div>
+
+<div class="container">
+
+<!-- ACTION CARDS -->
+<div class="actions-grid">
+
+  <!-- Start Attendance -->
+  <div class="card">
+    <div class="card-icon" style="background:#e3edff; color:#308ce8;">
+      <span class="material-symbols-outlined">how_to_reg</span>
+    </div>
+    <p class="card-title">Start Attendance</p>
+    <p class="card-desc">Initiate face recognition for your class.</p>
+    <button class="open-btn" id="startBtn">Open</button>
+  </div>
+
+  <!-- View Attendance -->
+  <div class="card" onclick="location.href='{{ url_for('view_student_data', course=course, class_key=class_key, subject=subject) }}'">
+    <div class="card-icon" style="background:#ebe6ff; color:#6d51ff;">
+      <span class="material-symbols-outlined">assessment</span>
+    </div>
+    <p class="card-title">View Attendance</p>
+    <p class="card-desc">Check and edit student attendance records.</p>
+    <button class="open-btn">Open</button>
+  </div>
+
+  <!-- Update Portion -->
+  <div class="card" onclick="location.href='{{ url_for('teacher_portion_completion') }}'">
+    <div class="card-icon" style="background:#dffef3; color:#0f9c6e;">
+      <span class="material-symbols-outlined">edit_document</span>
+    </div>
+    <p class="card-title">Update Portion</p>
+    <p class="card-desc">Log topics completed in your classes.</p>
+    <button class="open-btn">Open</button>
+  </div>
+
+  <!-- View Schedule -->
+  <div class="card" onclick="location.href='{{ url_for('teacher_schedule') }}'">
+    <div class="card-icon" style="background:#fff7ed; color:#f97316;">
+      <span class="material-symbols-outlined">calendar_month</span>
+    </div>
+    <p class="card-title">My Schedule</p>
+    <p class="card-desc">View your lecture timetable.</p>
+    <button class="open-btn">Open</button>
+  </div>
+
+  <!-- Make Announcement -->
+  <div class="card" onclick="location.href='{{ url_for('teacher_notice') }}'">
+      <div class="card-icon" style="background:#ffeafe; color:#ba44e4;">
+        <span class="material-symbols-outlined">campaign</span>
+      </div>
+      <p class="card-title">Make Announcement</p>
+      <p class="card-desc">Share updates with your students.</p>
+      <button class="open-btn">Open</button>
+  </div>
+
+
+</div>
+</div>
+
+<script>
+let countdownInterval;
+
+// START ATTENDANCE
+document.getElementById("startBtn").onclick = function () {
+  fetch("/generate_class_code", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      course: "{{ course }}",
+      class_key: "{{ class_key }}",
+      subject: "{{ subject }}"
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.ok) {
+      document.getElementById("headerSessionBox").style.display = "flex";
+      document.getElementById("hs_code").innerText = data.code;
+      startTimer(data.expires_at);
+    }
+  });
+};
+
+// EXTEND SESSION
+document.getElementById("hs_extend").onclick = function () {
+  fetch("/extend_session", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      course: "{{ course }}",
+      class_key: "{{ class_key }}",
+      subject: "{{ subject }}"
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.ok) startTimer(data.expires_at);
+  });
+};
+
+// END SESSION
+document.getElementById("hs_end").onclick = function () {
+  fetch("/end_session", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      course: "{{ course }}",
+      class_key: "{{ class_key }}",
+      subject: "{{ subject }}"
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.ok) {
+      clearInterval(countdownInterval);
+      document.getElementById("headerSessionBox").style.display = "none";
+    }
+  });
+};
+
+// TIMER
+function startTimer(expiryTime) {
+  clearInterval(countdownInterval);
+
+  countdownInterval = setInterval(() => {
+    let now = Math.floor(Date.now() / 1000);
+    let remain = expiryTime - now;
+
+    if (remain <= 0) {
+      clearInterval(countdownInterval);
+      document.getElementById("hs_timer").innerText = "Expired";
+      return;
+    }
+
+    let m = Math.floor(remain / 60);
+    let s = remain % 60;
+
+    document.getElementById("hs_timer").innerText =
+      `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }, 1000);
+}
+</script>
+
+</body>
+</html>

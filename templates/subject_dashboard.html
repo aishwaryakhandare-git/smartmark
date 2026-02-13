@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ subject }} Dashboard - SmartMark</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 700px;
+      margin: 60px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    h1 {
+      color: #5a2ea6;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      margin: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: white;
+      background: linear-gradient(135deg, #7f00ff, #e100ff);
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .btn-logout {
+      background: #d9534f !important;
+    }
+    .btn-edit-profile {
+      display: inline-block;
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      background: #6a5acd;
+      color: white;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+    .btn-edit-profile:hover {
+      background: #4b3ca3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>{{ subject }} Dashboard</h1>
+    <p><b>Teacher:</b> {{ teacher }} | <b>Course:</b> {{ course }} | <b>Class:</b> {{ session['class'] }}</p>
+    
+    <!-- Added Edit Profile Button -->
+    <a href="{{ url_for('student_profile', update=True) }}" class="btn-edit-profile">📝 Edit Profile</a>
+    
+    <a href="{{ url_for('start_attendance') }}" class="btn">Start Attendance</a>
+    <a href="{{ url_for('view_attendance') }}" class="btn">View Attendance</a>
+    <a href="{{ url_for('teacher_logout') }}" class="btn btn-logout">Logout</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SmartMark - Landing Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #ffffff;   /* pure white */
+      color: #1F2937;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 600px;
+      left: 50%;
+      width: 1100px;
+      height: 1100px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 25px solid rgba(79, 70, 229, 0.05);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+
+    /* Navbar */
+    .navbar {
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 4rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-left {
+      flex: 1;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #6366F1;
+    }
+
+    .nav-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+
+    .nav-center a {
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #374151;
+      transition: color 0.3s ease;
+    }
+
+    .nav-center a:hover {
+      color: #6366F1;
+    }
+
+    .nav-right {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .nav-btn {
+      background-color: #6366F1;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.6rem;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover {
+      background-color: #4F46E5;
+      transform: translateY(-2px);
+    }
+
+    /* Hero Section */
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 90vh;
+      text-align: center;
+      padding: 120px 20px 0 20px;
+    }
+
+    .hero h1 {
+      font-size: clamp(3rem, 8vw, 9rem);
+      font-weight: 800;
+      background: linear-gradient(90deg, #2DD4BF, #4F46E5);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero p {
+      max-width: 700px;
+      font-size: 1.2rem;
+      color: #0f0f0f;
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-buttons button {
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 0.9rem 2.5rem;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn-login {
+      background-color: #4F46E5;
+      color: #fff;
+    }
+
+    .btn-login:hover {
+      background-color: #4338CA;
+      transform: translateY(-4px);
+      box-shadow: 0 6px 14px rgba(79,70,229,0.4);
+    }
+
+    .btn-signup {
+      background-color: #fff;
+      color: #1F2937;
+      border: 1px solid #d1d5db;
+    }
+
+    .btn-signup:hover {
+      background-color: #f3f4f6;
+      transform: translateY(-4px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    }
+
+    /* Role Section */
+    .role-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      max-width: 1200px;
+      margin: 80px auto;
+      padding: 0 30px;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+
+    .role-left {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .role-left h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #4F46E5;
+      margin-bottom: 0.8rem;
+    }
+
+    .role-left p {
+      color: #6B7280;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+
+    .role-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .role-card {
+      background-color: #fff;
+      padding: 1rem;
+      text-align: center;
+      font-weight: 600;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.3s ease;
+    }
+
+    .role-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    }
+
+    .btn-try {
+      background-color: #4F46E5;
+      color: #fff;
+      border: none;
+      border-radius: 9999px;
+      padding: 12px 40px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+
+    .btn-try:hover {
+      background-color: #4338CA;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(79,70,229,0.4);
+    }
+
+    .role-right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 1.5rem;
+      min-width: 280px;
+    }
+
+    .role-right .role-image {
+      width:650px;
+      height: 400px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .role-right .role-image:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    }
+
+    @media (max-width: 1024px) {
+      .role-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .role-right {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+
+    /* Popup Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 380px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      text-align: center;
+      position: relative;
+    }
+
+    .close {
+      position: absolute;
+      right: 1rem;
+      top: 0.5rem;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #9CA3AF;
+    }
+
+    .modal h2 {
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .role-tabs {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1rem;
+      background: #F3F4F6;
+      border-radius: 8px;
+    }
+
+    .role-tab {
+      flex: 1;
+      padding: 0.5rem 0;
+      cursor: pointer;
+      font-weight: 600;
+      border-radius: 8px;
+    }
+
+    .role-tab.active {
+      background-color: #fff;
+      color: #2563EB;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      border: 1px solid #D1D5DB;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+
+    .modal button {
+      width: 100%;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 6px;
+      background-color: #2563EB;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .modal button:hover {
+      background-color: #1E40AF;
+    }
+
+    .forgot {
+      margin-top: 0.5rem;
+      color: #2563EB;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .footer-note {
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: #9CA3AF;
+    }
+
+    .custom-login-img {
+  width: 800px;   /* desired width */
+  height: 500px;  /* desired height */
+  object-fit: cover;  /* maintains aspect ratio without stretching */
+  margin-left: auto;   /* pushes the image to the right */
+  display: block; 
+}
+
+
+/* Features Section */
+.features-section {
+  padding: 80px 20px;
+  background-color: #FFFFFF;
+  color: #1F2937;
+}
+
+.features-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.features-header h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.features-header p {
+  font-size: 1rem;
+  color: #4B5563;
+  max-width: 600px;
+  margin: 0 auto 4rem auto;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  justify-items: center;  /* centers the cards horizontally in their column */
+}
+
+
+.feature-card {
+  display: flex;
+  flex-direction: column;   /* stack icon, title, text vertically */
+  align-items: center;      /* center everything horizontally */
+  gap: 1rem;                /* spacing between icon, title, text */
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  text-align: center;       /* center title and description */
+}
+
+
+.feature-card-wide {
+  grid-column: 1 / -1;   /* span full width */
+  justify-self: center;   /* center this specific card */
+  max-width: 350px;       /* optional: control card width */
+}
+
+
+.feature-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  background-color: #E0E7FF; /* lighter indigo */
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-icon .material-symbols-outlined {
+  font-size: 1.75rem;
+  color: #6366F1;
+}
+
+.feature-card h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.25rem;
+}
+
+.feature-card p {
+  font-size: 0.95rem;
+  color: #4B5563;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .feature-card-wide {
+    grid-column: span 2;
+    justify-content: center;
+  }
+}
+
+/* Footer */
+.footer {
+  background-color: #F9FAFB;
+  padding: 3rem 1rem;
+  color: #6B7280;
+  text-align: center;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-nav a {
+  text-decoration: none;
+  color: #6B7280;
+  transition: color 0.3s ease;
+}
+
+.footer-nav a:hover {
+  color: #111827;
+}
+
+.footer-socials {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.footer-socials a {
+  text-decoration: none;
+  color: #9CA3AF;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.footer-socials a:hover {
+  color: #4F46E5;
+}
+
+.footer p {
+  font-size: 0.875rem;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+  font-size: 1.75rem; /* adjust icon size */
+  color: #6366F1; /* Tailwind primary indigo */
+}
+
+
+.feature-card-horizontal {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.feature-card-horizontal:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.feature-card-horizontal .feature-icon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  background-color: #E0E7FF;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-card-horizontal .feature-content h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.feature-card-horizontal .feature-content p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #4B5563;
+}
+
+.feature-card-center {
+  grid-column: 1 / -1;   /* spans the full row */
+  justify-self: center;   /* center horizontally */
+  width: 100%;            /* occupy full available width */
+  max-width: 750px;       /* limit max width to match top cards */
+}
+
+/* ===== BACKGROUND BLOBS ===== */
+
+.bg-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+ 
+}
+
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.25;
+}
+
+.blob-coral {
+  width: 400px;
+  height: 400px;
+  background: #FF8E8E;
+  top: 10%;
+  left: 5%;
+}
+
+.blob-sky {
+  width: 500px;
+  height: 500px;
+  background: #8ECAFF;
+  bottom: 20%;
+  right: 10%;
+}
+
+.blob-mint {
+  width: 350px;
+  height: 350px;
+  background: #98FFD9;
+  top: 40%;
+  right: 20%;
+}
+
+/* ===== HERO RINGS ===== */
+
+.hero {
+  position: relative;
+}
+
+.hero-rings {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.hero {
+  position: relative;
+}
+
+/* ===== HERO RINGS ===== */
+
+.hero {
+  position: relative;
+}
+
+.extra-rings {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.ring {
+  position: fixed;
+  border-radius: 50%;
+}
+
+/* TOP LEFT RING */
+.ring-3 {
+  width: 650px;
+  height: 650px;
+  border: 25px solid rgba(233, 140, 69, 0.05);
+  top: -100px;
+  left: -70px;
+}
+
+/* RIGHT SIDE RING */
+.ring-4 {
+  width: 400px;
+  height: 400px;
+  border: 30px solid #a0dec3c3;
+  bottom: -40px;
+  right: 40px;
+}
+
+.bg-blobs {
+  display: none;
+}
+
+.hero-badge {
+  display: inline-block;
+  padding: 10px 22px;
+  margin-bottom: 30px;
+  margin-top: -60px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #4F46E5;
+  background: rgba(99, 102, 241, 0.12);
+  backdrop-filter: blur(6px);
+}
+
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-blobs">
+    <div class="blob blob-coral"></div>
+    <div class="blob blob-sky"></div>
+    <div class="blob blob-mint"></div>
+  </div>
+
+  <!-- ✅ FLASH MESSAGE BLOCK -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;">
+      {% for category, message in messages %}
+        <div class="flash-message" style="
+          margin-bottom: 10px;
+          padding: 12px 18px;
+          border-radius: 8px;
+          color: white;
+          font-weight: 500;
+          background-color: {% if category == 'success' %}#16a34a{% elif category == 'danger' %}#dc2626{% elif category == 'warning' %}#facc15{% else %}#3b82f6{% endif %};
+          box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+          opacity: 0.95;
+          transition: opacity 0.4s ease;
+        ">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+    <script>
+      // Auto-hide flash messages after 3 seconds
+      setTimeout(() => {
+        document.querySelectorAll('.flash-message').forEach(msg => {
+          msg.style.opacity = '0';
+          setTimeout(() => msg.remove(), 400);
+        });
+      }, 3000);
+    </script>
+  {% endif %}
+{% endwith %}
+
+  <!-- ✅ Navbar Restored -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <div class="logo">SmartMark</div>
+    </div>
+
+    <div class="nav-center">
+      <a href="#">Home</a>
+      <a href="{{ url_for('feature') }}">Features</a>
+      <a href="/about">About</a>
+      <a href="{{ url_for('contact') }}">Contact</a>
+    </div>
+
+    <div class="nav-right">
+      <button class="nav-btn" id="getStartedBtn">Get Started</button>
+    </div>
+  </nav>
+
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="extra-rings">
+      <div class="ring ring-3"></div>
+      <div class="ring ring-4"></div>
+    </div>
+
+    <div class="hero-rings">
+      <div class="ring ring-outer"></div>
+      <div class="ring ring-middle"></div>
+      <div class="ring ring-inner"></div>
+    </div>
+
+    <div class="hero-badge">
+      MODERN FACIAL RECOGNITION
+    </div>
+
+    <h1>SmartMark</h1>
+    <p>Revolutionizing attendance tracking with facial recognition.<br>
+       Experience the future of workforce management sysrtem.</p>
+    <div class="hero-buttons">
+      <button class="btn-login">Login</button>
+      <button class="btn-signup">Sign Up</button>
+    </div>
+  </section>
+
+  <!-- HOW SMARTMARK WORKS -->
+  <section style="padding:100px 20px; text-align:center;">
+    
+    <h2 style="font-size:2.8rem; font-weight:800; margin-bottom:10px;">
+      How <span style="color:#4F46E5;">SmartMark</span> Works
+    </h2>
+
+    <p style="color:#6B7280; margin-bottom:60px;">
+      Simple. Secure. Seamless.
+    </p>
+
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:40px; max-width:1200px; margin:0 auto;">
+
+      <div style="background:#F9FAFB; padding:40px; border-radius:16px; width:300px; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
+        <span class="material-symbols-outlined" style="font-size:40px; color:#4F46E5;">manage_accounts</span>
+        <h3 style="margin-top:20px; font-size:1.4rem;">Admin Setup</h3>
+        <p style="color:#6B7280; margin-top:10px;">
+          Register your organization and configure courses easily.
+        </p>
+      </div>
+
+      <div style="background:#F9FAFB; padding:40px; border-radius:16px; width:300px; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
+        <span class="material-symbols-outlined" style="font-size:40px; color:#14B8A6;">face_unlock</span>
+        <h3 style="margin-top:20px; font-size:1.4rem;">Facial Attendance</h3>
+        <p style="color:#6B7280; margin-top:10px;">
+          AI-powered facial recognition for secure attendance.
+        </p>
+      </div>
+
+      <div style="background:#F9FAFB; padding:40px; border-radius:16px; width:300px; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
+        <span class="material-symbols-outlined" style="font-size:40px; color:#4F46E5;">query_stats</span>
+        <h3 style="margin-top:20px; font-size:1.4rem;">Smart Reports</h3>
+        <p style="color:#6B7280; margin-top:10px;">
+          Real-time analytics and downloadable reports.
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- CTA SECTION -->
+  <section style="padding:80px 20px; text-align:center;">
+
+    <h3 style="font-size:2rem; font-weight:700; margin-bottom:20px;">
+      Ready to modernize your attendance?
+    </h3>
+
+    <p style="color:#6B7280; max-width:600px; margin:0 auto 40px;">
+      Join institutions using SmartMark to streamline operations with AI.
+    </p>
+
+    <button id="freeTrialBtn" class="nav-btn" style="padding:14px 40px; font-size:1rem;">
+      Start Your Free Trial
+    </button>
+
+  </section>
+
+  <!-- Login Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <span class="close" id="closeLogin">&times;</span>
+      <h2>SmartMark</h2>
+      <p>Face Recognition Attendance System</p>
+      <div class="role-tabs">
+        <div class="role-tab active">Admin</div>
+        <div class="role-tab">Teacher</div>
+        <div class="role-tab">Student</div>
+      </div>
+      <form method="POST" action="/login">
+        
+        <input type="hidden" name="role" id="role" value="admin">
+
+        <!-- EMAIL + PASSWORD (Admin & Student) -->
+<div id="defaultLoginFields">
+    <input type="text" name="email" id="loginEmailField" placeholder="Email or ID" required>
+    <input type="password" name="password" placeholder="Password" required>
+</div>
+
+<!-- TEACHER LOGIN FIELDS -->
+<div id="teacherLoginFields" style="display:none;">
+    <input type="text" name="teacher_name" placeholder="Teacher Name" required>
+    <input type="password" name="subject_pass" placeholder="Subject Password" required>
+</div>
+
+        <button type="submit">Login</button>
+      </form>
+
+      <div class="forgot">Forgot Password?</div>
+      <div class="footer-note">© SmartMark 2025 – Digital Attendance Platform</div>
+    </div>
+  </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const tabs = document.querySelectorAll("#loginModal .role-tab");
+    const roleInput = document.getElementById("role");
+
+    const emailField = document.querySelector("#defaultLoginFields input[name='email']");
+    const passField = document.querySelector("#defaultLoginFields input[name='password']");
+
+    const teacherFields = document.getElementById("teacherLoginFields");
+    const teacherName = document.querySelector("input[name='teacher_name']");
+    const subjectPass = document.querySelector("input[name='subject_pass']");
+
+    // remove required at start
+    teacherName.required = false;
+    subjectPass.required = false;
+
+    tabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+
+            tabs.forEach(t => t.classList.remove("active"));
+            tab.classList.add("active");
+
+            const role = tab.textContent.trim().toLowerCase();
+            roleInput.value = role;
+
+            // ---------- ADMIN ----------
+            if (role === "admin") {
+                teacherFields.style.display = "none";
+
+                emailField.name = "email";
+
+                emailField.style.display = "block";
+                passField.style.display = "block";
+
+                emailField.placeholder = "Email";
+                passField.placeholder = "Password";
+                
+                emailField.required = true;
+                passField.required = true;
+
+                teacherName.required = false;
+                subjectPass.required = false;
+            }
+
+            // ---------- TEACHER ----------
+            if (role === "teacher") {
+                teacherFields.style.display = "block";
+                emailField.name = "email";
+                emailField.style.display = "none";
+                passField.style.display = "none";
+
+                teacherName.required = true;
+                subjectPass.required = true;
+
+                emailField.required = false;
+                passField.required = false;
+            }
+
+            // ---------- STUDENT ----------
+            if (role === "student") {
+                teacherFields.style.display = "none";
+
+                emailField.style.display = "block";
+                passField.style.display = "block";
+
+                emailField.placeholder = "Student ID";
+                passField.placeholder = "Student Password";
+
+                emailField.name = "student_id";
+
+                emailField.required = true;
+                passField.required = true;
+
+                teacherName.required = false;
+                subjectPass.required = false;
+            }
+        });
+    });
+
+});
+</script>
+
+
+</script>
+
+  <!-- Signup Modal -->
+  <div class="modal" id="signupModal">
+    <div class="modal-content">
+      <span class="close" id="closeSignup">&times;</span>
+      <h2>Create Account</h2>
+      <div class="role-tabs">
+        <div class="role-tab active">Admin</div>
+        <div class="role-tab">Teacher</div>
+        <div class="role-tab">Student</div>
+      </div>
+  <form method="POST" action="/signup" id="signupForm">
+  
+
+    <!-- Hidden role (needed by Flask) -->
+  <input type="hidden" name="role" id="signupRole" value="admin">
+
+  <!-- Corrected name field -->
+  <input type="text" name="name" placeholder="Full Name" required>
+  <input type="email" name="email" placeholder="Email" required>
+  <input type="password" name="password" placeholder="Password" required>
+  <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+  <!-- INSTITUTE NAME (admin only) -->
+<input 
+  type="text" 
+  name="institute_name" 
+  id="instituteField"
+  placeholder="Institute / School / Organization Name"
+  required>
+
+    <input type="text"
+       name="student_id"
+       id="signupStudentID"
+       placeholder="Student ID (e.g., IT-5120)"
+       style="display: none;">
+
+  <input type="password"
+       name="student_password"
+       id="studentPasswordField"
+       placeholder="Student Password"
+       style="display: none;">
+
+  <!-- SUBJECT PASSWORD (teacher only) -->
+  <input
+    type="password"
+    name="subject_password"
+    id="signupSubjectPassword"
+    placeholder="Subject Password (provided by Admin)"
+    style="display: none; margin-top: 0.5rem;"
+  >
+
+  <button type="submit">Sign Up</button>
+</form>
+
+<script>
+document.getElementById("signupForm").addEventListener("submit", () => {
+    const activeRole = document.querySelector("#signupModal .role-tab.active").textContent.trim().toLowerCase();
+    document.getElementById("signupRole").value = activeRole;
+});
+</script>
+
+<script>
+// SIGNUP ROLE SWITCHING — FIXED CLEAN VERSION
+document.querySelectorAll("#signupModal .role-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+
+        // remove active class
+        document.querySelectorAll("#signupModal .role-tab")
+            .forEach(t => t.classList.remove("active"));
+
+        tab.classList.add("active");
+
+        // set role for backend
+        const role = tab.textContent.trim().toLowerCase();
+        document.getElementById("signupRole").value = role;
+        
+        const instituteField = document.getElementById("instituteField");
+
+        if (role === "admin") {
+            instituteField.style.display = "block";
+            instituteField.required = true;
+        } else {
+            instituteField.style.display = "none";
+            instituteField.required = false;
+            instituteField.value = "";
+        }
+
+        // teacher subject password field
+        const subPass = document.getElementById("signupSubjectPassword");
+        if (role === "teacher") {
+            subPass.style.display = "block";
+            subPass.required = true;
+        } else {
+            subPass.style.display = "none";
+            subPass.required = false;
+            subPass.value = "";
+        }
+
+        // student fields
+        const stuID = document.getElementById("signupStudentID");
+        const stuPassField = document.getElementById("studentPasswordField");
+
+        if (role === "student") {
+            stuID.style.display = "block";
+            stuID.required = true;
+
+            stuPassField.style.display = "block";
+            stuPassField.required = true;
+        } else {
+            stuID.style.display = "none";
+          
+            stuPassField.style.display = "none";
+            
+        }
+    });
+});
+
+
+</script>
+
+
+      <div class="footer-note">Already have an account? <span class="forgot" id="goLogin">Login</span></div>
+    </div>
+  </div>
+
+
+  <!-- Footer -->
+<footer class="footer">
+  <div class="footer-container">
+    <nav class="footer-nav">
+      <a href="#">About Us</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+      <a href="#">Support</a>
+    </nav>
+    <div class="footer-socials">
+      <a href="#"><span class="sr-only">Facebook</span>FB</a>
+      <a href="#"><span class="sr-only">Twitter</span>TW</a>
+      <a href="#"><span class="sr-only">LinkedIn</span>IN</a>
+    </div>
+    <p>© 2024 Face Attendance Inc. All rights reserved.</p>
+  </div>
+</footer>
+
+  <script>
+    const loginBtn = document.querySelector('.btn-login');
+    const signupBtn = document.querySelector('.btn-signup');
+    const loginModal = document.getElementById('loginModal');
+    const signupModal = document.getElementById('signupModal');
+    const closeLogin = document.getElementById('closeLogin');
+    const closeSignup = document.getElementById('closeSignup');
+    const goLogin = document.getElementById('goLogin');
+
+    // Open Modals
+    loginBtn.addEventListener('click', () => loginModal.style.display = 'flex');
+    signupBtn.addEventListener('click', () => signupModal.style.display = 'flex');
+
+    // Close Modals
+    closeLogin.addEventListener('click', () => loginModal.style.display = 'none');
+    closeSignup.addEventListener('click', () => signupModal.style.display = 'none');
+    goLogin.addEventListener('click', () => {
+      signupModal.style.display = 'none';
+      loginModal.style.display = 'flex';
+    });
+
+    // Close by clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === loginModal) loginModal.style.display = 'none';
+      if (e.target === signupModal) signupModal.style.display = 'none';
+    });
+
+  </script>
+
+  <script>
+
+</script>
+
+<!-- ✅ GET STARTED MODAL -->
+<div id="getStartedModal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <span id="closeGetStarted" class="close">&times;</span>
+    <h2>Welcome to SmartMark</h2>
+    <p>Select your role and sign in</p>
+
+    <!-- Role buttons -->
+    <div style="display:flex;gap:1rem;margin-bottom:1rem;">
+      <button class="roleBtn active" data-role="admin">Admin</button>
+      <button class="roleBtn" data-role="teacher">Teacher</button>
+      <button class="roleBtn" data-role="student">Student</button>
+    </div>
+
+    <!-- Role-based login fields -->
+    <div id="adminFields">
+      <input type="email" id="adminEmail" placeholder="Admin Email" required>
+      <input type="password" id="adminPassword" placeholder="Password" required>
+    </div>
+
+    <div id="teacherFields" style="display:none;">
+      <input type="text" id="teacherID" placeholder="Teacher ID" required>
+      <input type="password" id="teacherPassword" placeholder="Password" required>
+    </div>
+
+    <div id="studentFields" style="display:none;">
+      <input type="text" id="studentID" placeholder="Student ID" required>
+      <input type="password" id="studentPassword" placeholder="Password" required>
+    </div>
+
+    <button id="getStartedLoginBtn">Continue</button>
+  </div>
+</div>
+
+<!--
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("getStartedModal");
+  const btn = document.getElementById("getStartedBtn");
+  const closeBtn = document.getElementById("closeGetStarted");
+  const roleBtns = document.querySelectorAll(".roleBtn");
+  const loginBtn = document.getElementById("getStartedLoginBtn");
+
+  const adminFields = document.getElementById("adminFields");
+  const teacherFields = document.getElementById("teacherFields");
+  const studentFields = document.getElementById("studentFields");
+
+  // ✅ 1. On "Get Started" click
+  btn.addEventListener("click", () => {
+    const savedRole = localStorage.getItem("role");
+    const savedUser = localStorage.getItem("user");
+
+    if (savedRole && savedUser) {
+      // Redirect based on role
+      if (savedRole === "admin") window.location.href = "/admin_dashboard";
+      else if (savedRole === "teacher") window.location.href = "/teacher_dashboard";
+      else window.location.href = "/student_dashboard";
+    } else {
+      modal.style.display = "flex"; // open modal
+    }
+  });
+
+  // ✅ 2. Close modal
+  closeBtn.addEventListener("click", () => modal.style.display = "none");
+  window.addEventListener("click", (e) => {
+    if (e.target === modal) modal.style.display = "none";
+  });
+
+  // ✅ 3. Switch role forms
+  roleBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      roleBtns.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      const role = btn.dataset.role;
+      adminFields.style.display = role === "admin" ? "block" : "none";
+      teacherFields.style.display = role === "teacher" ? "block" : "none";
+      studentFields.style.display = role === "student" ? "block" : "none";
+    });
+  });
+
+
+  // ✅ 4. Login button logic
+  loginBtn.addEventListener("click", async () => {
+    const activeRole = document.querySelector(".roleBtn.active").dataset.role;
+    let data = {};
+
+    if (activeRole === "admin") {
+      data = {
+        email: document.getElementById("adminEmail").value,
+        password: document.getElementById("adminPassword").value
+      };
+    } else if (activeRole === "teacher") {
+      data = {
+        id: document.getElementById("teacherID").value,
+        password: document.getElementById("teacherPassword").value
+      };
+    } else {
+      data = {
+        id: document.getElementById("studentID").value,
+        password: document.getElementById("studentPassword").value
+      };
+    }
+
+    // ✅ send data to backend
+    const response = await fetch("/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: new URLSearchParams({
+    email: data.email || data.id,  // supports email or ID
+    password: data.password
+  })
+});
+
+
+    if (response.redirected) {
+  // Flask sent a redirect → follow it
+  window.location.href = response.url;
+} else {
+  const html = await response.text();
+  if (html.includes("admin_dashboard")) {
+    window.location.href = "/admin_dashboard";
+  } else if (html.includes("teacher_dashboard")) {
+    window.location.href = "/teacher_dashboard";
+  } else if (html.includes("student_dashboard")) {
+    window.location.href = "/student_dashboard";
+  } else {
+    alert("Invalid credentials. Please try again.");
+  }
+}
+
+
+  });
+});
+</script>
+-->
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const getStartedBtn = document.getElementById("getStartedBtn");
+  const freeTrialBtn = document.getElementById("freeTrialBtn");
+  const signupForm = document.getElementById("signupForm");
+
+  function openCorrectModal() {
+    const hasSignedUp = localStorage.getItem("hasSignedUp");
+
+    if (hasSignedUp === "true") {
+      document.getElementById("loginModal").style.display = "flex";
+    } else {
+      document.getElementById("signupModal").style.display = "flex";
+    }
+  }
+
+  // 🔹 When user clicks Get Started
+  getStartedBtn.addEventListener("click", openCorrectModal);
+  freeTrialBtn.addEventListener("click", openCorrectModal);
+
+  signupForm.addEventListener("submit", () => {
+    localStorage.setItem("hasSignedUp", "true");
+  });
+
+});
+</script>
+
+</body>
+</html>

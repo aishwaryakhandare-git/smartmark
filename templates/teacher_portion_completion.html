@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Update Portion - {{ subject }}</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<style>
+:root {
+    --primary: #0f67ff;
+    --bg: #f4f6f8;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --text: #111418;
+    --subtext: #637588;
+}
+
+/* Global Styling */
+body {
+    font-family: "Lexend", sans-serif;
+    margin: 0;
+    background: var(--bg);
+}
+
+/* Main Wrapper */
+.main {
+    max-width: 1300px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+/* Page Title */
+.page-title {
+    font-size: 34px;
+    font-weight: 800;
+    margin-bottom: 25px;
+}
+
+/* Layout Grid */
+.grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 30px;
+}
+
+/* Left Column */
+.left-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 26px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.04);
+}
+
+/* Info Rows */
+.info-block {
+    margin-bottom: 18px;
+}
+
+.info-label {
+    color: var(--subtext);
+    font-size: 14px;
+}
+
+.info-value {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Progress */
+.progress-title {
+    margin-top: 25px;
+    font-weight: 700;
+}
+
+.progress-bg {
+    margin-top: 8px;
+    width: 100%;
+    height: 8px;
+    background: #e0e6ef;
+    border-radius: 20px;
+}
+
+.progress-fill {
+    width: {{ completion_percent }}%;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 20px;
+}
+
+/* Date Box */
+.date-box {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #eef0f4;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+/* Right Column */
+.right-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.04);
+}
+
+/* Section Title */
+.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 22px;
+}
+
+/* Inputs */
+label {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-size: 15px;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+}
+
+.btn-clear {
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    border-radius: 12px;
+}
+
+.btn-save {
+    background: var(--primary);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Previous Updates Table */
+.table-title {
+    margin-top: 30px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+table {
+    width: 100%;
+    margin-top: 12px;
+    border-collapse: collapse;
+    background: white;
+}
+
+th, td {
+    padding: 14px 10px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+}
+
+th {
+    background: #f3f4f6;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--subtext);
+}
+
+.action-icons span {
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0.6;
+}
+.action-icons span:hover { opacity: 1; }
+
+.total-chapter-input {
+    width: 140px !important;   /* adjust size */
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="main">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+        <h1 class="page-title" style="margin-bottom:0;">
+            Update Portion - {{ subject }}
+        </h1>
+
+        <a href="{{ url_for('teacher_dashboard') }}"
+            style="
+                text-decoration:none;
+                padding:8px 14px;
+                border-radius:10px;
+                background:#0f67ff;
+                color:white;
+                font-size:14px;
+                font-weight:600;
+                box-shadow:0 2px 6px rgba(15,103,255,0.25);
+                transition:0.2s;
+                margin-top:10px;
+            ">
+                ← Back
+        </a>
+
+
+    </div>
+
+
+    <div class="grid">
+
+        <!-- LEFT PANEL -->
+        <div class="left-card">
+            <div class="info-block">
+                <p class="info-label">Subject Name</p>
+                <p class="info-value">{{ subject }}</p>
+            </div>
+
+            <div class="info-block">
+                <p class="info-label">Subject Code</p>
+                <p class="info-value">{{ subject_code }}</p>
+            </div>
+
+            <div class="info-block">
+            <p class="info-label">Class</p>
+            <p class="info-value">{{ class_name }}</p>
+        </div>
+
+        <!-- TOTAL CHAPTERS BLOCK -->
+        <div class="info-block">
+            <p class="info-label">Total Chapters</p>
+
+            {% if total_chapters %}
+                <!-- Already set → show + edit button -->
+                <p class="info-value">
+                    {{ total_chapters }}
+                    <button onclick="document.getElementById('editChaptersBox').style.display='block'"
+                        style="
+                            margin-left:10px;
+                            padding:4px 10px;
+                            font-size:12px;
+                            cursor:pointer;
+                            border-radius:6px;
+                            border:1px solid var(--primary);
+                            background:white;
+                            color:var(--primary);
+                        ">Edit</button>
+                </p>
+
+                <!-- HIDDEN EDIT BOX -->
+                <form method="POST" id="editChaptersBox" style="display:none; margin-top:10px;">
+                    <input type="number" name="total_chapters" value="{{ total_chapters }}" min="1" required>
+                    <button type="submit" class="btn-save" style="padding:6px 14px; font-size:13px;">Update</button>
+                </form>
+
+            {% else %}
+                <!-- First time → allow teacher to set total chapters -->
+                <form method="POST">
+                    <input type="number" name="total_chapters" placeholder="Enter Total Chapters" min="1" required>
+                    <button type="submit" class="btn-save" style="margin-top:10px;">Save</button>
+                </form>
+            {% endif %}
+        </div>
+
+            <p class="progress-title">Portion Completion</p>
+            <div class="progress-bg">
+                <div class="progress-fill"></div>
+            </div>
+            <p style="margin-top:5px; font-weight:600;">{{ completion_percent }}%</p>
+
+            <div class="date-box">
+                <span class="material-symbols-outlined">calendar_today</span>
+                {{ current_date }}
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="right-card">
+
+            <h2 class="section-title">Update Completed Chapters</h2>
+
+            <form method="POST">
+
+                <!-- COMPLETED CHAPTER COUNT -->
+                <label>Completed Chapters (Till Now)</label>
+                <input
+                    type="number"
+                    name="completed_chapters"
+                    min="0"
+                    max="{{ total_chapters }}"
+                    value="{{ completed_chapters }}"
+                    required
+                >
+
+                <!-- TOPICS COVERED (RESTORED) -->
+                <label>Topics Covered Today</label>
+                <textarea
+                    name="details"
+                    placeholder="Eg: Linear Search, Binary Search"
+                    required
+                ></textarea>
+
+                <!-- AUTO CHAPTER LABEL -->
+                <input type="hidden" name="chapter" value="Chp {{ completed_chapters + 1 }}">
+
+                <div class="buttons">
+                    <button type="reset" class="btn-clear">Clear</button>
+                    <button type="submit" class="btn-save">Save Update</button>
+                </div>
+            </form>
+
+
+
+            {% if message %}
+            <div class="message">{{ message }}</div>
+            {% endif %}
+
+            <p class="table-title">Previous Updates</p>
+
+            <table>
+                <tr>
+                    <th>Lecture/Chapter</th>
+                    <th>Topics</th>
+                    <th>Date Updated</th>
+                </tr>
+
+                {% for item in previous_updates %}
+                <tr>
+                    <td>{{ item.chapter }}</td>
+                    <td>{{ item.details }}</td>
+                    <td>{{ item.timestamp }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

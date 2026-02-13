@@ -1,0 +1,422 @@
+{% extends "base.html" %}
+{% set active = "schedule" %}
+
+{% block content %}
+<div class="page-wrap">
+  
+  <!-- Header -->
+  <div class="header-row">
+    <div>
+      <div class="subtitle">{{ current_date }}</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- LEFT SIDE -->
+    <div class="main-col">
+
+      <!-- TODAY'S LECTURES -->
+      <h3 class="section-title">Today's Lectures</h3>
+
+      <div class="today-list">
+        {% if today_lectures %}
+          {% for lec in today_lectures %}
+          <div class="lecture-card">
+            <div class="time-col">
+              <div class="time-main">{{ lec.start_time }}</div>
+              <div class="time-sub">{{ lec.end_time }}</div>
+            </div>
+
+            <div class="info-col">
+              <div class="subject">{{ lec.subject }}</div>
+              <div class="teacher">{{ lec.teacher }}</div>
+              <div class="room">{{ lec.room }}</div>
+            </div>
+
+            <div class="status-col">
+              <span class="chip">Upcoming</span>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="empty">No lectures scheduled today.</div>
+        {% endif %}
+      </div>
+
+
+
+    <!-- WEEKLY TIMETABLE -->
+    <h3 class="section-title">Weekly Timetable</h3>
+
+    <div class="timetable-card">
+    <div class="timetable-grid">
+
+        <!-- Headers -->
+        <div class="col time-col-head">Time</div>
+        {% for d in ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"] %}
+        <div class="col day-head">{{ d }}</div>
+        {% endfor %}
+
+        <!-- Dynamic Time Slots -->
+        {% for slot in time_slots %}
+        <!-- Slot Label -->
+        <div class="col time-col-head slot">{{ slot }}</div>
+
+        <!-- Loop Days -->
+        {% for d in ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"] %}
+            <div class="col day-cell">
+
+            {% for lec in weekly[d] %}
+                {% if slot == lec.start_time ~ "-" ~ lec.end_time %}
+                <div class="tiny-lecture">
+                    <div class="tiny-title">{{ lec.subject }}</div>
+                    <div class="tiny-teacher">{{ lec.teacher }}</div>
+                </div>
+                {% endif %}
+            {% endfor %}
+
+            </div>
+        {% endfor %}
+
+        {% endfor %}
+
+    </div>
+</div>
+
+
+    </div>
+
+
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="side-col">
+
+      <!-- Reminders -->
+      <div class="card reminders">
+        <h4>Reminders & Tasks</h4>
+
+        <form class="reminder-form" method="POST" action="{{ url_for('add_reminder') }}">
+            <input name="title" placeholder="Title" required />
+            <textarea name="description" placeholder="Description"></textarea>
+
+            <div class="row">
+            <input type="date" name="date" required />
+            <input type="time" name="time" required />
+            </div>
+
+            <button class="btn-primary small">Add Reminder</button>
+        </form>
+        </div>
+
+
+      <!-- Upcoming Tasks -->
+      <div class="card upcoming">
+        <h4>Upcoming</h4>
+
+        {% if reminders %}
+            {% for key, r in reminders.items() %}
+            <div class="up-item">
+                <div class="up-title">{{ r.title }}</div>
+                <div class="up-sub">
+                    {{ r.date }} • {{ r.time }}
+                    {% if r.description %}
+                        <br><span style="color:#6b7280;">{{ r.description }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="up-item">
+                <div class="up-sub">No reminders added.</div>
+            </div>
+        {% endif %}
+    </div>
+
+    </aside>
+
+  </div>
+
+</div>
+
+
+<!-- FLASH MESSAGE -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, msg in messages %}
+    <div id="flash-box" class="flash {{ category }}">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% endblock %}
+
+
+{% block style %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+body{
+  background:
+      radial-gradient(at 0% 0%, rgba(219, 218, 233, 0.12) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(104, 218, 209, 0.1) 0px, transparent 50%),
+      #f8fafc;
+}
+
+/* PAGE BASE */
+.page-wrap{
+  max-width:1300px;
+  margin:20px auto 40px auto;
+  padding: 0 30px;
+  font-family:'Inter',sans-serif;
+  
+
+/* HEADER */
+.page-title{ font-size:36px; font-weight:800; margin-bottom:5px; }
+.subtitle{ color:#6b7280; }
+
+.subtitle{
+  margin-bottom:8px;
+}
+
+/* LAYOUT */
+.layout{
+  display:grid;
+  grid-template-columns: 2fr 1fr;
+  gap:40px;
+  margin-top:30px;
+}
+
+/* CARDS */
+.card,
+.lecture-card,
+.timetable-card{
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(18px);
+  border-radius:26px;
+  border:1px solid rgba(255,255,255,0.6);
+  box-shadow:
+      0 15px 35px rgba(0,0,0,0.08),
+      0 5px 15px rgba(79,70,229,0.05);
+}
+
+/* NEXT UPCOMING CLASS */
+.next-card{ display:flex; justify-content:space-between; align-items:center; }
+.soon{ color:#2b8cee; font-weight:700; }
+.next-subject{ font-size:24px; font-weight:800; margin:6px 0; }
+.meta{ display:flex; gap:14px; color:#475569; margin-top:10px; }
+.no-next{ font-size:18px; padding:25px 0; color:#475569; }
+
+/* TIMER */
+.timer{ display:flex; gap:12px; margin-bottom:14px; }
+.time-block{
+  background:#fff;
+  padding:10px 14px;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  text-align:center;
+}
+.time-value{ font-size:20px; font-weight:800; }
+.time-label{ font-size:11px; color:#6b7280; }
+
+/* BUTTONS */
+.btn-primary{
+  background: linear-gradient(135deg,#4f46e5,#4338ca);
+  color:white;
+  font-weight:700;
+  border:none;
+  padding:16px;
+  border-radius:16px;
+  cursor:pointer;
+  transition:0.2s ease;
+}
+
+.btn-primary:hover{
+  transform: scale(0.98);
+}
+
+.btn-primary.small{ padding:8px 12px; font-size:14px; }
+
+/* TODAY'S LECTURES */
+.section-title{
+  font-size:26px;
+  font-weight:800;
+  margin:15px 0 18px;
+}
+
+.lecture-card{
+  display:flex;
+  align-items:center;
+  gap:40px;
+  padding:32px;
+  transition:0.3s ease;
+}
+
+.lecture-card:hover{
+  transform: translateY(-3px);
+  box-shadow:
+      0 20px 40px rgba(79,70,229,0.15);
+}
+
+.time-main{
+  font-size:34px;
+  font-weight:800;
+  color:#4f46e5;
+}
+
+.time-sub{
+  font-size:13px;
+  color:#94a3b8;
+}
+
+.subject{
+  font-size:22px;
+  font-weight:800;
+}
+
+.teacher,
+.room{
+  color:#64748b;
+}
+
+.chip{
+  background:#eef2ff;
+  color:#4f46e5;
+  padding:8px 16px;
+  border-radius:999px;
+  font-weight:700;
+}
+
+.time-col{ width:110px; }
+.time-main{ font-weight:800; font-size:18px; }
+.time-sub{ font-size:12px; color:#6b7280; }
+.info-col .subject{ font-weight:800; font-size:18px; color:#1e3a8a; }
+.teacher,.room{ color:#64748b; }
+.chip{
+  background:#eef2ff;
+  color:#1e3a8a;
+  padding:6px 12px;
+  border-radius:999px;
+  font-weight:700;
+}
+
+/* EMPTY */
+.empty{ color:#6b7280; padding:18px 0; }
+
+/* WEEKLY TIMETABLE */
+.timetable-card{
+  padding:18px;
+  border-radius:18px;
+  margin-top:15px;
+}
+.timetable-grid{
+  display:grid;
+  grid-template-columns:140px repeat(6,1fr);
+  gap:22px;
+  padding:30px;
+}
+.day-head{
+  font-weight:700;
+  text-align:center;
+  color:#64748b;
+}
+.time-col-head{
+  font-weight:600;
+  color:#94a3b8;
+}
+.tiny-lecture{
+  background:#eef2ff;
+  border-left:4px solid #4f46e5;
+  padding:14px;
+  border-radius:14px;
+}
+
+.tiny-title{
+  font-weight:700;
+  color:#4f46e5;
+}
+
+.day-head{ font-weight:700; text-align:center; }
+.time-col-head{ font-weight:700; color:#6b7280; }
+.tiny-lecture{
+  background:#f0f9ff;
+  padding:6px 10px;
+  border-radius:8px;
+  margin-bottom:6px;
+}
+.tiny-title{ font-weight:700; color:#0c4a6e; }
+.tiny-teacher{ font-size:12px; color:#64748b; }
+
+/* REMINDERS */
+.reminder-form input,
+.reminder-form textarea{
+  width:90%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,0.08);
+  background:rgba(255,255,255,0.6);
+  backdrop-filter:blur(6px);
+}
+.reminder-form input:focus,
+.reminder-form textarea:focus{
+  outline:none;
+  border-color:#4f46e5;
+  box-shadow:0 0 0 2px rgba(79,70,229,0.2);
+}
+
+.reminder-form .row{
+  display:flex;
+  gap:10px;
+}
+
+/* UPCOMING BOX */
+.up-item{
+  padding:10px 0;
+  border-bottom:1px solid #e5e7eb;
+}
+.up-title{ font-weight:700; }
+.up-sub{ font-size:12px; color:#6b7280; }
+
+/* FLASH */
+#flash-box{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#d1fae5;
+  padding:12px 16px;
+  border-left:6px solid #10b981;
+  border-radius:10px;
+  color:#065f46;
+  font-weight:700;
+  box-shadow:0 6px 16px rgba(0,0,0,0.15);
+}
+
+.card,
+.card:hover {
+    transition: 0s !important;
+    transform: none !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06) !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.side-col .card{
+  padding:30px;
+  border-radius:30px;
+}
+
+</style>
+
+<script>
+// Flash Auto Hide
+document.addEventListener("DOMContentLoaded", ()=>{
+  let box=document.getElementById("flash-box");
+  if(box){
+    setTimeout(()=>{
+      box.style.opacity="0";
+      box.style.transition="0.5s";
+      setTimeout(()=>box.remove(),500);
+    },3000);
+  }
+});
+</script>
+{% endblock %}

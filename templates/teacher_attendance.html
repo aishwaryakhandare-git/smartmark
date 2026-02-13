@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mark Attendance - {{ class_id }} - {{ subject }}</title>
+<style>
+  /* Global Styles */
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    align-items: center;
+  }
+
+  h1 {
+    margin-top: 40px;
+    color: #fff;
+    text-align: center;
+    font-size: 2rem;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+  }
+
+  form {
+    max-width: 700px;
+    width: 90%;
+    background: #ffffffdd;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    margin: 40px 0;
+  }
+
+  .student-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+    padding: 12px 15px;
+    border-radius: 10px;
+    background: #f7f7f7;
+    transition: 0.3s;
+  }
+
+  .student-row:hover {
+    background: #ece4fc;
+  }
+
+  .student-row span {
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    color: white;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(90deg, #2575fc, #6a11cb);
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .student-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    label {
+      margin-top: 5px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>Mark Attendance - {{ class_id }} - {{ subject }}</h1>
+
+<form method="POST" action="{{ url_for('save_attendance', class_id=class_id, subject=subject) }}">
+  {% for student in students %}
+  <div class="student-row">
+    <span>{{ student }}</span>
+    <label>
+      <input type="checkbox" name="present_{{ student }}" checked>
+      Present
+    </label>
+  </div>
+  {% endfor %}
+
+  <button type="submit">Save Attendance</button>
+</form>
+
+</body>
+</html>

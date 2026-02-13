@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - SmartMark</title>
+<style>
+  body {
+    margin:0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg,#eaeaf0, #6265b8);
+    color:#333;
+    text-align:center;
+  }
+
+  .hero {
+    padding: 80px 20px 40px;
+  }
+
+  .hero h1 {
+    font-size:5rem;
+    font-weight:700;
+    background: linear-gradient(90deg,#ff4e50,#8e2de2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+  }
+
+  .hero p {
+    font-size:1.3rem;
+    color:#1a237e;
+    margin: 10px 0;
+  }
+
+  .cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 40px 20px;
+  }
+
+  .card {
+    background:white;
+    padding:30px 20px;
+    border-radius:15px;
+    width:280px;
+    box-shadow:0 6px 15px rgba(0,0,0,0.1);
+    text-align:center;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover { transform: translateY(-8px); }
+
+  .card h3 {
+    font-size:1.3rem;
+    margin-bottom:15px;
+    color:#000;
+  }
+
+  .card p {
+    font-size:1rem;
+    color:#444;
+    line-height:1.5;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Include Navbar -->
+{% include 'navbar.html' %}
+
+<div class="hero">
+  <h1>Dashboard</h1>
+  <p>Quick access to all SmartMark features.</p>
+</div>
+
+<div class="cards">
+  <div class="card">
+    <h3>Admin Panel</h3>
+    <p>Manage users, view reports, and configure system settings.</p>
+  </div>
+  <div class="card">
+    <h3>Teacher Panel</h3>
+    <p>Mark attendance, view student progress, and generate reports.</p>
+  </div>
+  <div class="card">
+    <h3>Student Panel</h3>
+    <p>View attendance history and get notifications for missed sessions.</p>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>About Us | SMARTMARK</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #f6f7f8;
+    color: #111;
+    line-height: 1.6;
+}
+
+/* CENTERED NAVBAR (MATCHES INDEX PAGE) */
+
+.navbar {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 4rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-left {
+  flex: 1;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #6366F1;
+}
+
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+}
+
+.nav-center a {
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #374151;
+  transition: color 0.3s ease;
+}
+
+.nav-center a:hover {
+  color: #6366F1;
+}
+
+.nav-center a.active {
+  color: #6366F1;
+  font-weight: 600;
+}
+
+.nav-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-btn {
+  background-color: #6366F1;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.6rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+  background-color: #4F46E5;
+  transform: translateY(-2px);
+}
+
+/* ---------- HERO ---------- */
+.hero {
+    padding: 80px 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 50px;
+}
+
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+/* ---------- HERO ---------- */
+.hero {
+    padding: 80px 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 50px;
+}
+
+.hero-left {
+    flex: 1;
+}
+
+.hero-tag {
+    display: inline-block;
+    background: #e7f0ff;
+    color: #137fec;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+.hero-left h1 {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 20px;
+}
+
+.hero-left h1 span {
+    color: #137fec;
+}
+
+.hero-left p {
+    font-size: 18px;
+    color: #555;
+    max-width: 520px;
+}
+
+/* ---------- TIMELINE ---------- */
+.section {
+    padding: 80px 0;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-title h2 {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.section-title .line {
+    width: 80px;
+    height: 4px;
+    background: #137fec;
+    margin: 15px auto 0;
+    border-radius: 10px;
+}
+
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: auto;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #ddd;
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    display: flex;
+    margin-bottom: 50px;
+}
+
+.timeline-item:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.timeline-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    width: 45%;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.timeline-content h3 {
+    color: #137fec;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.timeline-content p {
+    font-size: 13px;
+    color: #555;
+}
+
+.timeline-dot {
+    width: 30px;
+    height: 30px;
+    background: #137fec;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* ---------- FEATURES ---------- */
+.features {
+    background: #ffffff;
+    padding: 80px 0;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+}
+
+.feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid #eee;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+}
+
+.feature-card h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.feature-card p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* ---------- VISION ---------- */
+.vision {
+    padding: 80px 0;
+}
+
+.vision-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.vision-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.vision-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.vision-card div {
+    padding: 20px;
+}
+
+.vision-card h4 {
+    margin-bottom: 10px;
+}
+
+/* ---------- CTA ---------- */
+.cta {
+    background: #137fec;
+    color: white;
+    padding: 80px 20px;
+    border-radius: 30px;
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.cta h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+.cta p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.cta-buttons {
+    margin-top: 30px;
+}
+
+.cta-buttons button {
+    padding: 14px 28px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: none;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.btn-light {
+    background: white;
+    color: #137fec;
+    font-weight: 700;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+}
+
+/* ---------- FOOTER ---------- */
+footer {
+    border-top: 1px solid #ddd;
+    padding: 40px 0;
+    font-size: 12px;
+    color: #666;
+}
+
+.hero-right {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.about-image-box {
+    width: 420px;
+    height: 420px;
+    background: linear-gradient(135deg, #eef6ff, #ffffff);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 30px 60px rgba(19,127,236,0.18);
+    position: relative;
+}
+
+.about-image-box img {
+    width: 85%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+.about-image-box::before {
+    content: "";
+    position: absolute;
+    inset: -25px;
+    background: radial-gradient(circle, rgba(19,127,236,0.25), transparent 70%);
+    filter: blur(40px);
+    z-index: -1;
+}
+
+/* ---------- HERO DECOR SHAPES ---------- */
+.hero-decor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* soft glowing orbs */
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.25;
+}
+
+.orb-blue {
+    width: 420px;
+    height: 420px;
+    background: #137fec;
+    top: -80px;
+    right: -120px;
+}
+
+.orb-cyan {
+    width: 520px;
+    height: 520px;
+    background: #06b6d4;
+    bottom: -120px;
+    left: -120px;
+}
+
+/* outline rings */
+.ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid;
+    opacity: 0.2;
+}
+
+.ring-blue {
+    width: 260px;
+    height: 260px;
+    border-color: #137fec;
+    top: 120px;
+    right: 80px;
+}
+
+.ring-cyan {
+    width: 180px;
+    height: 180px;
+    border-color: #06b6d4;
+    bottom: 100px;
+    left: 100px;
+}
+
+/* keep hero content above shapes */
+.hero {
+    position: relative;
+    z-index: 2;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+  <div class="nav-left">
+    <div class="logo">SmartMark</div>
+  </div>
+
+  <div class="nav-center">
+    <a href="{{ url_for('index') }}">Home</a>
+    <a href="{{ url_for('feature') }}">Features</a>
+    <a href="{{ url_for('about') }}" class="active">About</a>
+    <a href="{{ url_for('contact') }}">Contact</a>
+  </div>
+
+  <div class="nav-right">
+    <button class="nav-btn" id="getStartedBtn">Get Started</button>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Decorative Background Shapes -->
+<div class="hero-decor">
+    <div class="orb orb-blue"></div>
+    <div class="orb orb-cyan"></div>
+
+    <div class="ring ring-blue"></div>
+    <div class="ring ring-cyan"></div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-left">
+        <span class="hero-tag">SMART ATTENDANCE</span>
+        <h1>Humanizing Education Through <span>Smart Attendance</span></h1>
+        <p>
+            SMARTMARK is an AI-powered academic management system that replaces manual attendance with secure face recognition, real-time scheduling, and centralized control.
+        </p>
+    </div>
+    <div class="hero-right">
+        <div class="about-image-box">
+            <img 
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCh3x5lcU4Sj_uvxlsOzFG2l5hkXLbJ7hrsx5GElDySWyZZ5_AChgYVF398snSasrwifyMFcco4QqLhOgNcvyfeyCUv1SretItyMxAMOQhWJK6oRNE3i17TL7NPkpSa65LvnTTKSd4EtVIjq4cAdm1QDX3HxiufBg52b0tBZ5GFT8iwsARj6AY7K_0ZSvPLQfSYNpQrZqoUkCLqr1U3BmX2JOShaHjpB4JFDJ9ZYbtyZztgd8qNFLQhF-5oJAk0QCvPbXh-STDcXjY"
+              alt="AI Face">
+        </div>
+    </div>
+
+</section>
+
+<!-- EVOLUTION -->
+<section class="section">
+    <div class="section-title">
+        <h2>Our Evolution in Identity</h2>
+        <div class="line"></div>
+    </div>
+
+    <div class="timeline">
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h3>Identity Refined</h3>
+                <p>Accurate facial recognition ensuring genuine student presence.</p>
+            </div>
+            <div class="timeline-dot"></div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h3>Secure Attendance</h3>
+                <p>Class-code and face-based verification prevents proxy attendance.</p>
+            </div>
+            <div class="timeline-dot"></div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h3>Centralized Control</h3>
+                <p>Admin-managed courses, schedules, and data integrity.</p>
+            </div>
+            <div class="timeline-dot"></div>
+        </div>
+
+        <div class="timeline-item">
+            <div class="timeline-content">
+                <h3>Inclusive Design</h3>
+                <p>Built for real classrooms with fairness and reliability.</p>
+            </div>
+            <div class="timeline-dot"></div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+    <div class="container">
+        <div class="section-title">
+            <h2>The Engine Behind SMARTMARK</h2>
+            <div class="line"></div>
+        </div>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>Face Recognition</h3>
+                <p>Marks attendance using verified facial identity.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Role-Based Access</h3>
+                <p>Admin, Teacher, and Student dashboards.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Real-Time Sync</h3>
+                <p>Instant updates using Firebase database.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+    <h2>Ready to modernize attendance?</h2>
+    <p>SMARTMARK brings intelligence, security, and simplicity to education.</p>
+
+    <div class="cta-buttons">
+        <button class="btn-light">Get Started</button>
+        <button class="btn-outline">Contact Us</button>
+    </div>
+</section>
+
+</div>
+
+<footer>
+    <div class="container">
+        © 2026 SMARTMARK. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Subjects</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+
+    h1, h3 {
+      color: #4a148c; /* deep purple for headings */
+    }
+
+    form {
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 5px;
+      margin-right: 10px;
+    }
+
+    button {
+      padding: 5px 10px;
+      background-color: #7e57c2;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #5e35b1;
+    }
+
+    hr {
+      margin: 20px 0;
+      border: 0;
+      height: 1px;
+      background: #ccc;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .danger {
+      color: red;
+    }
+
+    .exit-btn {
+      float: right;
+      background-color: #f44336;
+    }
+
+    .exit-btn:hover {
+      background-color: #d32f2f;
+    }
+  </style>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+  </style>
+
+</head>
+
+<body class="bg-slate-100 min-h-screen">
+
+<div class="max-w-6xl mx-auto px-6 py-12">
+
+  <!-- PAGE HEADER -->
+  <div class="flex justify-between items-start mb-10">
+    <div>
+      <h1 class="text-4xl font-extrabold text-slate-900">
+        Add Subjects to Course:
+        <span class="text-blue-600">{{ course_name }}</span>
+      </h1>
+      <p class="text-slate-500 mt-2">
+        Configure subjects and manage student enrollment.
+      </p>
+    </div>
+
+    <a href="{{ url_for('admin_exit_add_subjects') }}">
+      <button class="bg-rose-500 hover:bg-rose-600 text-white px-5 py-2 rounded-xl font-semibold shadow">
+        Exit
+      </button>
+    </a>
+  </div>
+
+  <!-- FLASH MESSAGES -->
+  {% if flash_messages %}
+    {% for category, msg in flash_messages %}
+      <div class="mb-6 p-4 rounded-xl border
+        {% if category == 'success' %}
+          bg-emerald-50 border-emerald-200 text-emerald-700
+        {% else %}
+          bg-rose-50 border-rose-200 text-rose-700
+        {% endif %}">
+        {{ msg }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- CLASS LOOP -->
+  {% for class_key, class_info in classes.items() %}
+
+  <div class="bg-white border border-slate-200 rounded-2xl shadow-sm mb-10 overflow-hidden">
+
+    <!-- TOP BAR -->
+    <div class="p-8 border-b border-slate-100 bg-slate-50">
+      <div class="flex flex-col lg:flex-row justify-between items-center gap-6">
+
+        <h2 class="text-2xl font-bold text-slate-800">
+          Class: {{ class_info.display_name }}
+        </h2>
+
+      </div>
+    </div>
+
+    <!-- SUBJECT DISPLAY -->
+    <div class="p-8">
+
+      {% if class_info.subjects %}
+
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+          {% for subject, sub_info in class_info.subjects.items() %}
+          <div class="p-6 border border-slate-200 rounded-xl bg-slate-50 shadow-sm">
+            <h3 class="text-lg font-bold mb-2">{{ subject }}</h3>
+            <p class="text-sm text-slate-500">
+              Teacher Password:
+              <span class="font-mono text-blue-600">
+                {{ sub_info.password or 'Not set' }}
+              </span>
+            </p>
+          </div>
+          {% endfor %}
+        </div>
+
+      {% else %}
+
+        <div class="py-20 text-center">
+          <h3 class="text-2xl font-bold mb-2 text-slate-800">
+            No subjects added yet
+          </h3>
+          <p class="text-slate-500">
+            Start building your curriculum by adding your first subject.
+          </p>
+        </div>
+
+      {% endif %}
+
+      <!-- ADD SUBJECT FORM -->
+      <form method="POST"
+            action="{{ url_for('admin_add_subjects', course_key=course_key) }}"
+            class="flex flex-col sm:flex-row gap-4">
+
+        <input type="hidden" name="class_key" value="{{ class_key }}">
+
+        <input type="text"
+               name="subject"
+               placeholder="Enter Subject Name"
+               required
+               class="flex-1 px-4 py-3 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none">
+
+        <button type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold shadow">
+          Add Subject
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+  {% endfor %}
+
+</div>
+
+</body>
+
+</html>

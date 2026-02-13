@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Portion Completion – Admin View</title>
+
+<style>
+    body {
+        margin:0;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background: #f6f7f8;
+        color:#111;
+    }
+    header {
+        background:#fff;
+        padding:15px 25px;
+        border-bottom:1px solid #ddd;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+    header h1 { font-size:20px; font-weight:600; }
+    header a {
+        text-decoration:none;
+        padding:8px 14px;
+        border-radius:8px;
+        color:#666;
+        border:1px solid #ddd;
+    }
+    .container {
+        max-width:1200px;
+        margin:20px auto;
+        padding:20px;
+        background:white;
+        border-radius:12px;
+        box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    }
+    table {
+        width:100%;
+        border-collapse:collapse;
+        font-size:14px;
+    }
+    th {
+        background:#f1f1f1;
+        padding:12px;
+        text-transform:uppercase;
+        font-size:12px;
+    }
+    td {
+        padding:12px;
+        border-top:1px solid #eee;
+    }
+    .progress-bar {
+        height:8px;
+        border-radius:4px;
+        background:#ddd;
+        position:relative;
+        overflow:hidden;
+    }
+    .progress-fill {
+        height:100%;
+        background:#137fec;
+        border-radius:4px;
+    }
+    .btn-view {
+        background:none;
+        border:1px solid #137fec;
+        color:#137fec;
+        padding:4px 10px;
+        border-radius:6px;
+        cursor:pointer;
+        font-size:12px;
+        transition:0.2s;
+    }
+    .btn-view:hover {
+        background:#137fec;
+        color:white;
+    }
+
+    /* Slide Panel */
+    .panel {
+        position:fixed;
+        right:0;
+        top:0;
+        height:100vh;
+        width:350px;
+        background:white;
+        box-shadow:-4px 0 12px rgba(0,0,0,0.2);
+        transform:translateX(100%);
+        transition:0.3s ease;
+        overflow-y:auto;
+        padding:20px;
+        z-index:50;
+    }
+    .panel.active {
+        transform:translateX(0);
+    }
+    .panel h2 { margin-bottom:10px; }
+    .panel h3 { margin-top:25px; margin-bottom:10px; }
+    .chapter-list li {
+        padding:6px 0;
+        border-bottom:1px solid #eee;
+        font-size:14px;
+    }
+    .close-btn {
+        float:right;
+        cursor:pointer;
+        font-size:18px;
+        padding:5px;
+    }
+    #pageWrapper {
+        transition: margin-right 0.3s ease;
+    }
+
+    .page-shift {
+        margin-right: 350px; /* panel width */
+    }
+
+    /* When panel opens, shrink the table container */
+    .page-shift .container {
+        max-width: calc(100% - 370px); /* 350px panel + small gap */
+        transition: max-width 0.3s ease;
+    }
+    
+    #pageWrapper.page-shift {
+    margin-right: 350px; /* same as panel width */
+    transition: margin-right 0.3s ease;
+}
+    header {
+    position: relative;
+    z-index: 200;  /* higher than slide panel */
+    background: #fff;
+}
+    #pageWrapper.page-shift header {
+        margin-right: 39px; /* small shift - adjust this number */
+    }
+
+    
+</style>
+</head>
+
+
+<body>
+<div id="pageWrapper">
+
+<header>
+    <h1>Portion Completion</h1>
+    <a href="{{ url_for('admin_dashboard') }}">Back</a>
+</header>
+
+<div id="mainContent" class="container">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Course</th>
+                <th>Class</th>
+                <th>Subject</th>
+                <th>Progress</th>
+                <th>Completed</th>
+                <th>Pending</th>
+                <th>Teacher</th>
+                <th>Last Updated</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for row in portion_table %}
+            <tr>
+                <td>{{ row.course }}</td>
+                <td>{{ row.class }}</td>
+                <td>{{ row.subject }}</td>
+
+                <td style="width:150px;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: {{ row.percent }}%;"></div>
+                    </div>
+                    {{ row.percent }}%
+                </td>
+
+                <td>{{ row.completed }}</td>
+
+                <td>
+                    {% if row.pending != "N/A" %}
+                        {{ row.pending }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+
+                <td>{{ row.teacher }}</td>
+                <td>{{ row.last_updated }}</td>
+
+                <td>
+                    <button class="btn-view" onclick='openPanel({{ row | tojson }})'>
+                        View
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+<!-- Slide Panel -->
+<div id="sidePanel" class="panel">
+    <span class="close-btn" onclick="closePanel()">✖</span>
+
+    <h2 id="p_subject"></h2>
+    <p><strong>Teacher:</strong> <span id="p_teacher"></span></p>
+    <p><strong>Last Updated:</strong> <span id="p_last"></span></p>
+    <p><strong>Completed Chapters:</strong> <span id="p_completed_count"></span></p>
+
+    <h3>Completed Chapters</h3>
+    <ul id="p_completed" class="chapter-list"></ul>
+</div>
+
+<script>
+function openPanel(data) {
+    document.getElementById("p_subject").innerText = data.subject;
+    document.getElementById("p_teacher").innerText = data.teacher;
+    document.getElementById("p_last").innerText = data.last_updated;
+    document.getElementById("p_completed_count").innerText = data.completed_chapters;
+
+    let list = document.getElementById("p_completed");
+    list.innerHTML = "";
+
+    data.entries.forEach(item => {
+        list.innerHTML += `<li><strong>${item.chapter}</strong><br>${item.details}<br><small>${item.timestamp}</small></li>`;
+    });
+
+    document.getElementById("sidePanel").classList.add("active");
+    document.getElementById("pageWrapper").classList.add("page-shift");
+}
+
+function closePanel() {
+    document.getElementById("sidePanel").classList.remove("active");
+    document.getElementById("pageWrapper").classList.remove("page-shift");
+}
+
+</script>
+</div> <!-- end pageWrapper -->
+
+</body>
+</html>

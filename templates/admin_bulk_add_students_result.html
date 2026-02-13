@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bulk Add Result - {{ class_key }}</title>
+<style>
+  body { font-family: Arial; background: #f0f0f0; margin: 0; padding: 0; }
+  .container { max-width: 700px; margin: 50px auto; background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
+  h2 { text-align: center; margin-bottom: 25px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { border: 1px solid #333; padding: 10px; text-align: center; }
+  th { background: #4CAF50; color: #fff; }
+  td { background: #f9f9f9; }
+  .back-btn { display: block; margin: 20px auto; padding: 10px 20px; background: #4CAF50; color: #fff; border: none; border-radius: 10px; cursor: pointer; text-align: center; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>{{ students|length }} Students Added Successfully!</h2>
+  <table>
+    <thead>
+      <tr><th>Roll Number</th><th>Name</th><th>Password</th></tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+      <tr>
+        <td>{{ student.id }}</td>
+        <td>{{ student.name }}</td>
+        <td>{{ student.password }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <a href="{{ url_for('admin_dashboard') }}" class="back-btn">Back to Dashboard</a>
+</div>
+</body>
+</html>

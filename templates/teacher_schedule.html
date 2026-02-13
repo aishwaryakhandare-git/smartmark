@@ -1,0 +1,566 @@
+<!-- TEACHER SCHEDULE TEMPLATE ACTIVE -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Teacher Schedule</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+*{ box-sizing:border-box; }
+
+body{
+    margin:0;
+    font-family:"Lexend", sans-serif;
+    background:#f6f7f8;
+    color:#0f172a;
+}
+
+.material-symbols-outlined{
+    font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+}
+
+.app{
+    display:flex;
+    height:100vh;
+}
+
+/* MAIN */
+.main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+}
+
+/* HEADER */
+.header{
+    background:#fff;
+    padding:24px;
+    border-bottom:1px solid #e5e7eb;
+}
+
+.header-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.header-left{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+.icon-btn{
+    height:40px;
+    width:40px;
+    border-radius:10px;
+    border:none;
+    background:#f1f5f9;
+    cursor:pointer;
+}
+
+.icon-btn:hover{
+    background:#e2e8f0;
+}
+
+h1{
+    font-size:26px;
+    font-weight:900;
+    margin:0;
+}
+
+.week-bar{
+    margin-top:12px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.week-box{
+    display:flex;
+    align-items:center;
+    background:#f1f5f9;
+    border-radius:10px;
+    padding:4px 8px;
+}
+
+.week-box span{
+    padding:0 10px;
+    font-size:14px;
+    font-weight:700;
+}
+
+.export-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 14px;
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:700;
+}
+
+/* CONTENT */
+.content{
+    flex:1;
+    display:flex;
+    overflow:hidden;
+}
+
+/* TIMETABLE */
+.timetable{
+    flex:1;
+    overflow:auto;
+    padding:24px;
+}
+
+.table-wrapper{
+    min-width:1000px;
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+}
+
+.table-head{
+    display:flex;
+    border-bottom:1px solid #e5e7eb;
+    position:sticky;
+    top:0;
+    background:#fff;
+    z-index:10;
+}
+
+.time-col{
+    width:90px;
+    padding:14px;
+    font-size:11px;
+    font-weight:700;
+    color:#94a3b8;
+    text-transform:uppercase;
+    
+}
+
+.day-cols{
+    flex:1;
+    display:grid;
+    grid-template-columns:repeat(6,1fr); /* Mon–Sat */
+}
+
+.day{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:14px;
+    border-right:1px solid #e5e7eb;
+    border-left:1px solid #e5e7eb;
+}
+
+.day p{
+    margin:0;
+}
+
+.day-name{
+    font-size:11px;
+    font-weight:700;
+    color:#94a3b8;
+}
+
+.day-num{
+    font-size:20px;
+    font-weight:900;
+}
+
+.day:last-child,
+.day-column:last-child{
+    border-right:none;
+}
+
+/* BODY GRID */
+.table-body {
+    display: block;
+}
+
+.time-slots{
+    width:90px;
+    background:#f8fafc;
+}
+
+.time-slot{
+    height:112px;
+    font-size:10px;
+    font-weight:700;
+    color:#94a3b8;
+    text-align:center;
+    padding-top:8px;
+    border-right:1px solid #e5e7eb;
+}
+
+.day-column{
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid #eef2f7;
+    border-left:1px solid #e5e7eb;
+}
+
+.title{
+    font-size:13px;
+    font-weight:900;
+    margin-top:2px;
+}
+
+.meta{
+    font-size:10px;
+    margin-top:2px;
+}
+
+/* LECTURE CARD */
+.lecture{
+    width: 100%;
+    max-width: 100%;
+    min-height: 60px;
+    padding: 8px 12px;
+    background: #f1f7ff;
+    border-radius: 14px;
+    padding: 12px 18px;
+    border-left: 6px solid #3b82f6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+}
+
+.lecture.green{
+    background:#ecfdf5;
+    border-left-color:#10b981;
+}
+
+.lecture.purple{
+    background:#f5f3ff;
+    border-left-color:#8b5cf6;
+}
+
+.lecture.gray{
+    background:#f1f5f9;
+    border-left-color:#94a3b8;
+    border-style:dashed;
+}
+
+.subject{
+    font-size:10px;
+    font-weight:800;
+    text-transform:uppercase;
+}
+
+.title{
+    font-size:14px;
+    font-weight:900;
+    margin-top:4px;
+}
+
+.meta{
+    font-size:11px;
+    margin-top:6px;
+    color:#475569;
+    display:flex;
+    align-items:center;
+    gap:6px;
+}
+
+/* LIVE */
+.live{
+    position:relative;
+    box-shadow:0 0 0 2px #3b82f6;
+}
+
+.live::after{
+    content:"LIVE";
+    position:absolute;
+    top:-8px;
+    right:-8px;
+    background:#3b82f6;
+    color:#fff;
+    font-size:9px;
+    font-weight:800;
+    padding:4px 6px;
+    border-radius:999px;
+}
+
+/* SIDEBAR */
+.sidebar{
+    width:320px;
+    border-left:1px solid #e5e7eb;
+    background:#fff;
+    display:flex;
+    flex-direction:column;
+}
+
+.sidebar-content{
+    padding:24px;
+    flex:1;
+}
+
+.sidebar h3{
+    font-size:11px;
+    font-weight:800;
+    color:#94a3b8;
+    text-transform:uppercase;
+}
+
+.reminder{
+    margin-top:12px;
+    padding:12px;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    display:flex;
+    gap:10px;
+}
+
+.dot{
+    height:8px;
+    width:8px;
+    border-radius:50%;
+    margin-top:6px;
+}
+
+.dot.blue{ background:#3b82f6; }
+.dot.green{ background:#10b981; }
+.dot.purple{ background:#8b5cf6; }
+
+.rem-text{
+    font-size:14px;
+    font-weight:600;
+}
+
+.rem-time{
+    font-size:10px;
+    color:#64748b;
+    margin-top:2px;
+}
+
+/* SIDEBAR FOOTER */
+.sidebar-footer{
+    border-top:1px solid #e5e7eb;
+    padding:16px;
+}
+
+.sidebar-footer button{
+    background:none;
+    border:none;
+    font-weight:700;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.day.today{
+    background:#eff6ff;
+    border-radius:10px;
+}
+
+.day.today .day-num{
+    color:#2563eb;
+}
+
+.time-slots{
+    background:#f8fafc;
+    border-right:1px solid #e5e7eb;
+}
+
+.time-row{
+    display: grid;
+    grid-template-columns: 90px repeat(6, 1fr);
+    border-bottom: 1px solid #eef2f7;
+    min-height: 140px;
+    background: #ffffff;
+}
+
+.lecture.blue{
+    background:#eef5ff;
+    border-left-color:#3b82f6;
+}
+
+.lecture.green{
+    background:#ecfdf5;
+    border-left-color:#10b981;
+}
+
+.lecture.purple{
+    background:#f5f3ff;
+    border-left-color:#8b5cf6;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- MAIN -->
+<div class="main">
+
+    <div class="header">
+        <div class="header-top">
+            <div class="header-left">
+                <button class="icon-btn" onclick="history.back()">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                </button>
+                <div>
+                    <h1>Weekly Schedule</h1>
+                    <div class="week-bar">
+                        <div class="week-box">
+                
+                            <span>{{ today_label }}</span>
+                            
+                        </div>
+                        <button class="icon-btn">
+                            <span class="material-symbols-outlined">calendar_today</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="export-btn">
+                <span class="material-symbols-outlined">picture_as_pdf</span>
+                Export PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- TIMETABLE -->
+        <div class="timetable">
+            <div class="table-wrapper">
+
+                <!-- HEADER ROW -->
+                <div class="table-head">
+                    <div class="time-col">Time</div>
+                    <div class="day-cols">
+                        {% for d in week_days %}
+                        <div class="day {% if d.is_today %}today{% endif %}">
+                            <p class="day-name">{{ d.full_name }}</p>
+                            <p class="day-num">{{ d.date }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="table-body">
+
+                    {% set days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"] %}
+
+                    {% for slot_key in time_slots %}
+                    <div class="time-row">
+
+                        <!-- TIME COLUMN -->
+                        <div class="time-slot">
+                            {{ slot_key.replace("-", " - ") }}
+                        </div>
+
+                        <!-- DAY COLUMNS -->
+                        {% for day in ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"] %}
+                        <div class="day-column">
+
+                            {% for lec in weekly[day] %}
+                                {% if slot_key == lec.start_time ~ "-" ~ lec.end_time %}
+                                <div class="lecture">
+                                    <div class="subject">{{ lec.subject }}</div>
+                                    <div class="title">{{ lec.class }}</div>
+
+                                    <div class="meta">
+                                        <span class="material-symbols-outlined">schedule</span>
+                                        {{ lec.start_time }} – {{ lec.end_time }}
+                                    </div>
+
+                                    <div class="meta">
+                                        <span class="material-symbols-outlined">meeting_room</span>
+                                        {{ lec.room }}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                    {% endfor %}
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="sidebar-content">
+        <h3>Reminders</h3>
+
+        <form method="POST" action="{{ url_for('teacher_add_reminder') }}">
+
+            <input
+                name="text"
+                placeholder="Add reminder"
+                required
+                style="width:100%;padding:10px;border-radius:10px;border:1px solid #e5e7eb;margin-top:10px;"
+            >
+
+            <input
+                type="datetime-local"
+                name="datetime"
+                required
+                style="width:100%;padding:10px;border-radius:10px;border:1px solid #e5e7eb;margin-top:8px;"
+            >
+
+            <input type="hidden" name="subject" value="{{ teacher_subject }}">
+
+            <button
+                type="submit"
+                style="width:100%;margin-top:8px;padding:10px;border-radius:10px;border:none;background:#0f172a;color:white;font-weight:700;"
+            >
+                Add
+            </button>
+        </form>
+
+        {% for rid, rem in reminders.items() %}
+        <div class="reminder">
+            <div class="dot blue"></div>
+            <div>
+                <div class="rem-text">{{ rem.text }}</div>
+                <div class="rem-time">{{ rem.datetime }}</div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="sidebar-footer">
+        <button onclick="history.back()">
+            <span class="material-symbols-outlined">arrow_back</span> Back
+        </button>
+    </div>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home - SmartMark</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: white; /* changed page background to white */
+      color: #333;
+      text-align: center;
+      scroll-behavior: smooth;
+    }
+
+    /* Hero Section */
+    header {
+      padding: 80px 20px 40px;
+    }
+
+    header p {
+      font-size: 1.6rem;
+      color: #5317af;
+      margin: 12px 0;
+      font-weight: 600;
+    }
+
+    /* Login Buttons */
+    .buttons {
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      flex-wrap: wrap;
+    }
+
+    .buttons button {
+      padding: 20px 50px;
+      font-size: 1.3rem;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      color: white;
+      transition: all 0.4s ease;
+      background-size: 200% 200%;
+    }
+
+    .admin-btn {
+      background: linear-gradient(45deg, #ff6ec4, #ff9472, #ff6ec4);
+    }
+
+    .teacher-btn {
+      background: linear-gradient(45deg, #8e44ad, #bda4c7, #8e44ad);
+    }
+
+    .student-btn {
+      background: linear-gradient(45deg, #3498db, #6dd5ed, #3498db);
+    }
+
+    .buttons button:hover {
+      transform: scale(1.08);
+      opacity: 0.95;
+      background-position: right center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Info Cards Section */
+    .sections {
+      margin: 60px auto;
+      max-width: 700px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px 25px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      text-align: left;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.18);
+    }
+
+    .card h3 {
+      margin-bottom: 12px;
+      color: #4B0082;
+      font-size: 1.3rem;
+    }
+
+    .card p {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    /* Modals */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 50px 60px;
+      border-radius: 20px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+      width: 500px; /* increased width so inputs fit */
+      max-width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal h1 {
+      margin-bottom: 30px;
+      color: #4B0082;
+    }
+
+    .modal input[type="text"],
+    .modal input[type="password"],
+    .modal select {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .modal button {
+      padding: 15px 35px;
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .modal button:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .modal .close {
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      color: #333;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .buttons button {
+        padding: 18px 40px;
+        font-size: 1.1rem;
+      }
+
+      header p {
+        font-size: 1.4rem;
+      }
+
+      .card h3 {
+        font-size: 1.2rem;
+      }
+
+      .modal-content {
+        padding: 40px 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  {% include 'navbar.html' %}
+
+  <header id="home">
+    <p>Here you login!!!</p>
+  </header>
+
+  <div class="buttons">
+    <button class="admin-btn" id="openAdminModal">Admin Login</button>
+    <button class="teacher-btn" id="openTeacherModal">Teacher Login</button>
+    <button class="student-btn" type="button" onclick="openModal()">Student Login</button>
+  </div>
+
+  <div class="sections">
+    <div class="card">
+      <h3>Admin Login</h3>
+      <p>Manage users, configure system settings, and view overall reports.</p>
+    </div>
+    <div class="card">
+      <h3>Teacher Login</h3>
+      <p>Mark attendance, view student progress, and generate reports efficiently.</p>
+    </div>
+    <div class="card">
+      <h3>Student Login</h3>
+      <p>View your attendance history and receive notifications for missed sessions.</p>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div class="modal" id="adminModal">
+    <div class="modal-content">
+      <span class="close" id="closeAdminModal">&times;</span>
+      <h1>Admin Login</h1>
+      <form method="POST" action="{{ url_for('admin_login') }}" target="_self">
+        <input type="password" name="password" placeholder="Enter Admin Password" required>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Teacher Login Modal -->
+  <div class="modal" id="teacherModal">
+    <div class="modal-content">
+      <span class="close" id="closeTeacherModal">&times;</span>
+      <h1>Teacher Login</h1>
+      <form method="POST" action="{{ url_for('teacher_login') }}">
+        <input type="text" name="teacher_name" placeholder="Enter Teacher Name" required>
+        <input type="password" name="subject_password" placeholder="Enter Course Password" required>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Student Login Modal -->
+<div id="studentLoginModal" class="modal">
+  <div class="modal-content" style="width: 500px; padding: 50px 60px;"> <!-- same size as teacher/admin -->
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h1 style="color: #4B0082; margin-bottom: 30px;">Student Login</h1>
+    <form action="{{ url_for('student_login') }}" method="POST">
+      <input type="text" name="student_id" placeholder="Enter Roll Number" required>
+      <input type="password" name="student_password" placeholder="Enter Password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+</div>
+
+  <script>
+    // Open modals
+    document.getElementById("openAdminModal").onclick = function () {
+      document.getElementById("adminModal").style.display = "flex";
+    }
+    document.getElementById("openTeacherModal").onclick = function () {
+      document.getElementById("teacherModal").style.display = "flex";
+    }
+
+    // Close modals
+    document.getElementById("closeAdminModal").onclick = function () {
+      document.getElementById("adminModal").style.display = "none";
+    }
+    document.getElementById("closeTeacherModal").onclick = function () {
+      document.getElementById("teacherModal").style.display = "none";
+    }
+
+    function openModal() {
+      document.getElementById("studentLoginModal").style.display = "flex";
+    }
+    function closeModal() {
+      document.getElementById("studentLoginModal").style.display = "none";
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      if (event.target == document.getElementById("adminModal")) {
+        document.getElementById("adminModal").style.display = "none";
+      }
+      if (event.target == document.getElementById("teacherModal")) {
+        document.getElementById("teacherModal").style.display = "none";
+      }
+      if (event.target == document.getElementById("studentLoginModal")) {
+        closeModal();
+      }
+    };
+
+    // Close modals on form submit
+    document.querySelector('#adminModal form').onsubmit = function () {
+      document.getElementById("adminModal").style.display = "none";
+    };
+    document.querySelector('#studentLoginModal form').onsubmit = function () {
+      closeModal();
+    };
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notices</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f5f7fa; margin: 0; padding: 20px; }
+  h2 { text-align: center; color: #333; }
+  .notice-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 15px auto;
+    max-width: 600px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .notice-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    color: #6a11cb;
+    margin-bottom: 8px;
+  }
+  .notice-body { color: #333; margin-bottom: 5px; }
+  .notice-meta { font-size: 0.8rem; color: #666; }
+</style>
+</head>
+<body>
+  <h2>📢 Notices</h2>
+
+  {% if notices %}
+    {% for notice in notices %}
+      <div class="notice-card">
+        <div class="notice-header">
+          <span>{{ notice.title }}</span>
+          <span>{{ notice.uploader_role }}</span>
+        </div>
+        <div class="notice-body">{{ notice.body }}</div>
+        <div class="notice-meta">Posted by {{ notice.uploader_name }} on {{ notice.timestamp }}</div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p style="text-align:center;">No notices yet.</p>
+  {% endif %}
+</body>
+</html>

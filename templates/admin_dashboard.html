@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartMark Admin Dashboard</title>
+
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Spline Sans',sans-serif;
+  background:#f8fafc; /* light outer background */
+  color:#0f172a;
+}
+
+
+/* ================= NAVBAR ================= */
+.navbar{
+  position:sticky;top:0;z-index:100;
+  background:#fff;
+  border-bottom:1px solid #e5e7eb;
+}
+.navbar-inner{
+  max-width:1440px;
+  margin:0 auto;
+  padding:16px 32px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.logo{
+  width:42px;height:42px;
+  background:#3b82f6;
+  color:#fff;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+}
+.brand h1{font-size:18px;font-weight:700}
+.brand p{font-size:12px;color:#64748b}
+
+.nav-links{
+  display:flex;
+  gap:8px;
+  margin-left:32px;
+}
+.nav-links a{
+  text-decoration:none;
+  padding:8px 14px;
+  border-radius:8px;
+  color:#475569;
+  font-weight:500;
+}
+.nav-links a.active,
+.nav-links a:hover{
+  background:#eff6ff;
+  color:#2563eb;
+}
+
+.logout-btn{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:#3b82f6;
+  color:#fff;
+  border:none;
+  padding:8px 14px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:600;
+}
+.logout-btn:hover{background:#2563eb}
+
+/* ================= MAIN ================= */
+main{
+  max-width:1440px;
+  margin:0 auto;
+  padding:32px;
+  display:flex;
+  flex-direction:column;
+  gap:32px;
+
+  
+}
+
+
+/* HEADER */
+.page-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #e5e7eb;
+  padding-bottom:16px;
+}
+.page-header h2{
+  font-size:28px;
+  font-weight:700;
+}
+.page-header p{
+  color:#64748b;
+}
+.create-btn{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:#3b82f6;
+  color:#fff;
+  border:none;
+  padding:10px 18px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+}
+.create-btn:hover{background:#2563eb}
+
+/* ================= TOP CARDS ================= */
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:20px;
+}
+.card{
+  background:#f8fafc;
+  border:1px solid #e5e7eb;
+  border-radius:16px;
+  padding:20px;
+  cursor:pointer;
+  transition:.25s;
+}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 20px rgba(0,0,0,.08);
+}
+.card-icon{
+  width:42px;height:42px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:14px;
+}
+.blue{background:#eff6ff;color:#2563eb}
+.indigo{background:#eef2ff;color:#4f46e5}
+.teal{background:#ecfeff;color:#0f766e}
+.rose{background:#fff1f2;color:#be123c}
+
+.card h3{font-size:18px;font-weight:700}
+.card p{font-size:14px;color:#64748b}
+
+/* Progress */
+.progress-wrap{
+  margin-top:12px;
+  background:#e5e7eb;
+  border-radius:999px;
+  height:6px;
+}
+.progress{
+  height:6px;
+  width:75%;
+  background:#14b8a6;
+  border-radius:999px;
+}
+
+/* ================= QUICK + REMINDERS ================= */
+.bottom-grid{
+  display:grid;
+  grid-template-columns:1fr 3fr;
+  gap:24px;
+  
+}
+.quick-card{
+  margin-top:12px;   /* shift slightly downward */
+}
+
+@media(max-width:900px){
+  .bottom-grid{grid-template-columns:1fr}
+}
+
+/* Quick Access */
+.quick-card{
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  border-radius:16px;
+  padding:20px;
+  cursor:pointer;
+  transition:.25s;
+}
+.quick-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 10px 20px rgba(0,0,0,.08);
+}
+
+/* Reminders */
+.reminders{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+.rem-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.rem-header h3{font-size:20px;font-weight:700}
+.add-rem{
+  background:none;
+  border:none;
+  color:#2563eb;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.rem-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:20px;
+}
+.rem-card{
+  background:#fff;
+  border:1px solid #e5e7eb;
+  border-radius:16px;
+  padding:16px 16px 14px 20px;
+  position:relative;
+}
+.rem-card::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;height:100%;width:6px;
+  border-radius:16px 0 0 16px;
+}
+.red::before{background:#ef4444}
+.ind::before{background:#6366f1}
+.green::before{background:#22c55e}
+
+.tag{
+  font-size:11px;
+  font-weight:700;
+  padding:4px 8px;
+  border-radius:999px;
+  display:inline-block;
+  margin-bottom:8px;
+}
+.tag.red{background:#fee2e2;color:#b91c1c}
+.tag.ind{background:#e0e7ff;color:#4338ca}
+.tag.green{background:#dcfce7;color:#166534}
+
+.rem-card h4{font-size:16px;font-weight:700}
+.rem-card p{
+  font-size:14px;
+  color:#64748b;
+  margin:6px 0 12px;
+}
+.rem-date{
+  font-size:12px;
+  color:#64748b;
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+
+/* ===== Top Dashboard Card Colors ===== */
+
+.card.attendance {
+  background:#f0f6ff;
+  border:1px solid #c7dcff;
+}
+
+.card.students {
+  background:#f2f5ff;
+  border:1px solid #d6ddff;
+}
+
+.card.portion {
+  background:#ecfdf5;
+  border:1px solid #99f6e4;
+}
+
+.card.announcement {
+  background:#fff1f2;
+  border:1px solid #fecdd3;
+}
+
+/* Icon containers */
+.card.attendance .card-icon {
+  background:#e0edff;
+  color:#2563eb;
+}
+
+.card.students .card-icon {
+  background:#e8ebff;
+  color:#4f46e5;
+}
+
+.card.portion .card-icon {
+  background:#d1fae5;
+  color:#0f766e;
+}
+
+.card.announcement .card-icon {
+  background:#ffe4e6;
+  color:#be123c;
+}
+
+.card:hover{
+  box-shadow:0 12px 24px rgba(0,0,0,0.08);
+}
+
+/* ================= ADD REMINDER MODAL ================= */
+
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+}
+
+.modal{
+  background:#ffffff;
+  width:360px;
+  padding:24px;
+  border-radius:16px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.modal h3{
+  font-size:18px;
+  font-weight:700;
+}
+
+.modal input,
+.modal textarea,
+.modal select{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #e5e7eb;
+  font-family:inherit;
+}
+
+.modal textarea{
+  resize:none;
+  height:80px;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.modal-actions button{
+  padding:8px 14px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.modal-actions button[type="submit"]{
+  background:#3b82f6;
+  color:#fff;
+}
+
+.modal-actions button[type="button"]{
+  background:#e5e7eb;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="brand">
+      <div class="logo">S</div>
+      <div>
+        <h1>SmartMark</h1>
+        <p>Admin Panel</p>
+      </div>
+      <div class="nav-links">
+        <a class="active" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('admin_select_attendance') }}">Attendance</a>
+        <a href="{{ url_for('admin_add_course') }}">Students</a>
+        <a href="{{ url_for('admin_manage_courses') }}">Courses</a>
+        <a href="{{ url_for('upload_notice') }}">Announcements</a>
+      </div>
+    </div>
+
+    <button class="logout-btn" onclick="location.href='{{ url_for('index') }}'">
+      <span class="material-icons-outlined">logout</span>Logout
+    </button>
+  </div>
+</div>
+
+<main>
+
+<!-- HEADER -->
+<div class="page-header">
+  <div>
+    <h2>Welcome, Admin</h2>
+    <p>Here is your school overview for today.</p>
+  </div>
+  <button class="create-btn" onclick="location.href='{{ url_for('admin_add_course') }}'">
+    <span class="material-icons-outlined">add_circle</span>Create Course
+  </button>
+</div>
+
+<!-- TOP CARDS -->
+<div class="cards-grid">
+
+  <div class="card attendance"
+       onclick="location.href='{{ url_for('admin_select_attendance') }}'">
+    <div class="card-icon"><span class="material-icons-outlined">calendar_month</span></div>
+    <h3>View Attendance</h3>
+    <p>Check daily logs</p>
+  </div>
+
+  <div class="card students"
+       onclick="location.href='{{ url_for('admin_select_course') }}'">
+    <div class="card-icon"><span class="material-icons-outlined">groups</span></div>
+    <h3>Manage Students</h3>
+    <p>Add, edit, or remove profiles</p>
+  </div>
+
+  <div class="card portion"
+       onclick="location.href='{{ url_for('admin_portion_completion') }}'">
+    <div class="card-icon"><span class="material-icons-outlined">pie_chart</span></div>
+    <h3>Portion Completion</h3>
+    <p>Track academic progress</p>
+    <div class="progress-wrap"><div class="progress"></div></div>
+  </div>
+
+  <div class="card announcement"
+       onclick="location.href='{{ url_for('upload_notice') }}'">
+    <div class="card-icon"><span class="material-icons-outlined">campaign</span></div>
+    <h3>New Announcements</h3>
+    <p>Create and share updates</p>
+  </div>
+
+</div>
+
+
+<!-- BOTTOM -->
+<div class="bottom-grid">
+
+  <div class="quick-card" onclick="location.href='{{ url_for('admin_schedule') }}'">
+    <div class="card-icon blue"><span class="material-icons-outlined">calendar_clock</span></div>
+    <h3>Schedule</h3>
+    <p>View upcoming timetable</p>
+  </div>
+
+  <div class="reminders">
+    <div class="rem-header">
+      <h3>Important Reminders</h3>
+      <button class="add-rem" onclick="openReminder()">+ Add Reminder</button>
+    </div>
+
+    <div class="rem-grid">
+    {% for rid, r in reminders.items() %}
+      <div class="rem-card {{ 'red' if r.type=='URGENT' else 'ind' if r.type=='MEETING' else 'green' }}">
+        <span class="tag {{ 'red' if r.type=='URGENT' else 'ind' if r.type=='MEETING' else 'green' }}">
+          {{ r.type }}
+        </span>
+
+        <h4>{{ r.title }}</h4>
+        <p>{{ r.description }}</p>
+
+        <div class="rem-date">
+          <span class="material-icons-outlined">event</span>
+          {{ r.date }} • {{ r.time }}
+        </div>
+      </div>
+    {% else %}
+      <p style="color:#64748b;">No reminders added yet.</p>
+    {% endfor %}
+    </div>
+
+    </div>
+  </div>
+
+</div>
+
+</main>
+<!-- ================= ADD REMINDER MODAL ================= -->
+<div id="reminderModal" class="modal-bg" style="display:none;">
+  <form method="POST" action="{{ url_for('admin_add_reminder') }}" class="modal">
+
+    <h3>Add Reminder</h3>
+
+    <input type="text" name="title" placeholder="Reminder title" required>
+
+    <textarea name="description" placeholder="Description"></textarea>
+
+    <select name="type" required>
+      <option value="URGENT">Urgent</option>
+      <option value="MEETING">Meeting</option>
+      <option value="TASK">Task</option>
+    </select>
+
+    <input type="date" name="date" required>
+    <input type="time" name="time" required>
+
+    <div class="modal-actions">
+      <button type="button" onclick="closeReminder()">Cancel</button>
+      <button type="submit">Save</button>
+    </div>
+
+  </form>
+</div>
+
+<script>
+function openReminder(){
+  document.getElementById("reminderModal").style.display = "flex";
+}
+
+function closeReminder(){
+  document.getElementById("reminderModal").style.display = "none";
+}
+</script>
+
+</body>
+</html>

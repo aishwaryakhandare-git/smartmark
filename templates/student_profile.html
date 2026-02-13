@@ -1,0 +1,1164 @@
+{% extends "base.html" %}
+{% set active = 'profile' %}
+{% block title %}Student Profile - SmartMark{% endblock %}
+
+{% block content %}
+
+<div class="sp-page">
+
+    <main class="sp-main">
+
+        <!-- ========= PROFILE HEADER CARD ========= -->
+        <section class="sp-card-header">
+            <div class="sp-profile-left">
+                <!-- Avatar -->
+                <div class="sp-avatar-wrap">
+                    <img
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH2UK6lNK68IEK4yJTSaBvQQYqkwoBHohyKOnx29oLRis-ynuKxyEiwd7BZKSUF4BLpXphNPdT6S3emM696BLN0shLEcdpK6bWUa9U_nn20oDnjHD-jGL5MVnsoOctiz1lzqPo-ksWgaKOSmmmrM595bxXoDMVg52KztjIX9p8jVEIOwnfrLRJ826qWXv17OQXEHZYlhPracZwxV67farPdNVftG4uXM6a2khZPK3sUZAa-_uzmsd2Sz3dQRSMiTxXBQOTjqUJStDg"
+                        alt="Student profile picture"
+                        class="sp-avatar"
+                    />
+                </div>
+
+                <!-- Name + College -->
+                <div>
+                    <h1 class="sp-profile-name">{{ student_name }}</h1>
+                    <p class="sp-profile-meta">
+                        {{ institute_name }} (Student)
+                    </p>
+                </div>
+            </div>
+
+            <!-- Edit profile button (visual only for now) -->
+            <button class="sp-edit-btn">
+                Edit Profile
+            </button>
+        </section>
+
+        <!-- ========= FACE REGISTRATION STATUS STRIP ========= -->
+        <section class="sp-status-banner">
+            <div class="sp-status-left">
+                <span class="material-icons-outlined sp-status-icon">check_circle</span>
+                <p>
+                    <span class="sp-status-label">Face Registration Status:&nbsp;</span>
+                    <span class="sp-status-value"
+                            style="color: {{ 'green' if face_registered else 'red' }}">
+                            {{ "Face Registered & Active" if face_registered else "Not Registered" }}
+</span>
+
+                </p>
+            </div>
+
+            <p class="sp-status-updated">
+                Last updated:
+                {% if last_updated_str %}
+                    {{ last_updated_str }}
+                {% else %}
+                    Not registered
+                {% endif %}
+            </p>
+
+        </section>
+
+        
+        <!-- Hidden form (logic preserved) -->
+        <form id="profileForm" method="POST" action="{{ url_for('student_profile') }}" class="sp-hidden-form"></form>
+
+        <!-- ========= FEATURE CARDS GRID ========= -->
+        <section class="sp-feature-grid">
+
+            <!-- 1. Register / Update Face (uses your startCaptureBtn ID) -->
+            <button id="startCaptureBtn" class="sp-feature-card sp-feature-primary" type="button">
+                <span class="material-icons-outlined sp-feature-icon">add_a_photo</span>
+                <h3 class="sp-feature-title">Register / Update Face</h3>
+                <p class="sp-feature-desc">
+                    Add or refresh your face data.
+                </p>
+            </button>
+
+            <!-- 2. Attendance Report -->
+            <div class="sp-feature-card">
+                <span class="material-icons-outlined sp-feature-icon">bar_chart</span>
+                <h3 class="sp-feature-title">Attendance Report</h3>
+                <p class="sp-feature-desc">
+                    View overall &amp; subject-wise attendance.
+                </p>
+            </div>
+
+            <!-- 3. Face Data Status -->
+            <div class="sp-feature-card">
+                <span class="material-icons-outlined sp-feature-icon">verified_user</span>
+                <h3 class="sp-feature-title">Face Data Status</h3>
+                <p class="sp-feature-desc">
+                    Face verification &amp; validity status.
+                </p>
+            </div>
+
+            <!-- 4. Personal Details -->
+            <div id="personalDetailsCard" class="sp-feature-card">
+                <span class="material-icons-outlined sp-feature-icon">badge</span>
+                <h3 class="sp-feature-title">Personal Details</h3>
+                <p class="sp-feature-desc">
+                    Your basic student information.
+                </p>
+            </div>
+
+
+            <!-- 5. Help & Support -->
+            <div class="sp-feature-card">
+                <span class="material-icons-outlined sp-feature-icon">help</span>
+                <h3 class="sp-feature-title">Help &amp; Support</h3>
+                <p class="sp-feature-desc">
+                    Report issues or contact support.
+                </p>
+            </div>
+
+            <!-- 6. Face Recognition Logs -->
+            <div class="sp-feature-card">
+                <span class="material-icons-outlined sp-feature-icon">history</span>
+                <h3 class="sp-feature-title">Face Recognition Logs</h3>
+                <p class="sp-feature-desc">
+                    View your recent face verification and attendance capture events.
+                </p>
+            </div>
+
+        </section>
+
+        <!-- ========= LOGOUT (TOP-RIGHT OF PAGE AREA) ========= -->
+        <div class="sp-logout-row">
+            <a href="{{ url_for('student_logout') }}" class="sp-logout-link">
+                <span class="material-icons-outlined">logout</span>
+                <span>Logout</span>
+            </a>
+        </div>
+
+    </main>
+    
+    <!-- ================= FACE REGISTRATION POPUP MODAL ================= -->
+    <div id="faceModal" class="face-modal hidden">
+        <div class="face-modal-content">
+
+            <h2 class="face-modal-title">Register / Update Face</h2>
+
+            <!-- Camera preview -->
+            <div class="face-video-wrapper">
+                <video id="modalVideo" autoplay playsinline></video>
+            </div>
+
+            <p id="modalInstruction" class="face-instruction">
+                Click "Capture" to take photos.
+            </p>
+
+            <div class="face-progress">
+                <div id="modalProgress" class="face-progress-bar"></div>
+            </div>
+            <p id="modalCount" class="face-progress-text">Captured: 0 / 3</p>
+
+            <div class="face-btn-row">
+                <button id="modalCaptureBtn" class="face-btn face-btn-green">Capture</button>
+                <button id="modalResetBtn" class="face-btn face-btn-orange">Reset</button>
+            </div>
+
+            <button id="modalSubmitBtn" class="face-btn face-btn-blue" disabled>Submit</button>
+
+            <button id="modalCloseBtn" class="face-close-btn">✖</button>
+        </div>
+    </div>
+    
+
+    <!-- ================= PERSONAL DETAILS MODAL ================= -->
+    <div id="personalModalBackdrop"
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[9999] hidden 
+                flex items-center justify-center transition-opacity duration-200">
+
+    <div id="personalModal"
+     class="bg-white rounded-xl shadow-2xl w-[800px] max-w-[95%] max-h-[90vh] 
+            overflow-y-auto transform scale-95 opacity-0 transition-all duration-200">
+
+
+        <div class="p-6">
+        <div class="flex justify-between items-start">
+            <div>
+            <h2 id="modalTitle" class="text-2xl font-semibold">Personal Details</h2>
+            <p id="modalSub" class="text-sm text-slate-500">View or update your personal information</p>
+            </div>
+            <button id="pdCloseBtn" class="text-slate-500 hover:text-slate-700 text-xl">✖</button>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- VIEW-ONLY FIELDS -->
+        <div class="grid grid-cols-2 gap-4 mb-4 text-sm text-slate-700">
+            <div>
+            <label class="text-xs text-slate-500">Student ID</label>
+            <div id="pd_student_id" class="font-medium">-</div>
+            </div>
+            <div>
+            <label class="text-xs text-slate-500">Institute</label>
+            <div id="pd_institute" class="font-medium">-</div>
+            </div>
+            <div>
+            <label class="text-xs text-slate-500">Class</label>
+            <div id="pd_class" class="font-medium">-</div>
+            </div>
+            <div>
+            <label class="text-xs text-slate-500">Course</label>
+            <div id="pd_course" class="font-medium">-</div>
+            </div>
+            <div>
+            <label class="text-xs text-slate-500">Account Email</label>
+            <div id="pd_email" class="font-medium">-</div>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- EDITABLE PERSONAL DETAILS -->
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+            <label class="text-xs text-slate-500">Full Name</label>
+            <input id="pd_fullname" class="pd-input" type="text">
+            </div>
+
+            <div>
+            <label class="text-xs text-slate-500">Email</label>
+            <input id="pd_personal_email" class="pd-input" type="email">
+            </div>
+
+            <div>
+            <label class="text-xs text-slate-500">Date of Birth</label>
+            <input id="pd_dob" class="pd-input" type="date">
+            </div>
+
+            <div>
+            <label class="text-xs text-slate-500">Gender</label>
+            <select id="pd_gender" class="pd-input">
+                <option value="">Select</option>
+                <option>Female</option>
+                <option>Male</option>
+                <option>Other</option>
+            </select>
+            </div>
+
+            <div>
+            <label class="text-xs text-slate-500">Phone</label>
+            <input id="pd_phone" class="pd-input" type="tel">
+            </div>
+
+            <div>
+            <label class="text-xs text-slate-500">Parent / Guardian Name</label>
+            <input id="pd_parent_name" class="pd-input" type="text">
+            </div>
+
+            <div>
+            <label class="text-xs text-slate-500">Parent Contact</label>
+            <input id="pd_parent_contact" class="pd-input" type="tel">
+            </div>
+
+            <div class="col-span-2">
+            <label class="text-xs text-slate-500">Address</label>
+            <textarea id="pd_address" rows="3" class="pd-input"></textarea>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="flex justify-end gap-3 mt-6">
+            <button id="pdCancelBtn" class="hidden px-4 py-2 rounded bg-gray-200">Cancel</button>
+            <button id="pdEditBtn" class="px-4 py-2 rounded bg-blue-600 text-white">Edit</button>
+            <button id="pdSaveBtn" class="hidden px-4 py-2 rounded bg-green-600 text-white">Save</button>
+        </div>
+
+        </div>
+    </div>
+    </div>
+    <!-- ================= END PERSONAL DETAILS MODAL ================= -->
+
+</div>
+
+{% endblock %}
+
+{% block style %}
+<style>
+
+/* ==== FIX OVERALL PAGE WIDTH & IMPROVE LAYOUT ON LAPTOP ==== */
+
+/* Center all content and prevent it from stretching too wide */
+/* ---- MAIN CONTENT WRAPPER ---- */
+/* Make the content fit the laptop screen cleanly */
+.sp-main {
+    max-width: 1350px !important;   /* Wider screen usage */
+    margin: 0 auto;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+/* Slightly widen feature cards grid so they spread better */
+.sp-feature-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    gap: 24px !important;
+}
+
+/* ---- INDIVIDUAL FEATURE CARD ---- */
+.sp-feature-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px 18px !important;       /* Reduced padding for cleaner look */
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.04);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.sp-feature-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.15);
+    border-color: #2563eb;
+}
+
+/* Reduce header card size */
+.sp-card-header {
+    padding: 18px 22px !important;
+}
+
+/* Reduce status banner height */
+.sp-status-banner {
+    padding: 10px 16px !important;
+}
+
+/* Reduce avatar size slightly */
+.sp-avatar {
+    width: 64px !important;
+    height: 64px !important;
+}
+
+/* Basic utility so your JS that toggles "hidden" keeps working */
+.hidden {
+    display: none;
+}
+
+/* ---- Page layout ---- */
+.sp-page {
+    background: #f5f7fb;
+    min-height: calc(100vh - 60px); /* leaves space for bottom nav */
+    padding: 20px 0 120px !important;
+    box-sizing: border-box;
+}
+
+.sp-main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px 40px;
+    box-sizing: border-box;
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* ---- Profile header card ---- */
+.sp-card-header {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+    border: 1px solid #e5e7eb;
+}
+
+.sp-profile-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.sp-avatar-wrap {
+    position: relative;
+}
+
+.sp-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e5e7eb;
+    background: #e5e7eb;
+}
+
+.sp-profile-name {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.sp-profile-meta {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.sp-edit-btn {
+    border: none;
+    outline: none;
+    background: linear-gradient(135deg, #4F46E5, #74a0e6);;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(37, 99, 235, 0.35);
+    transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.sp-edit-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 9px rgba(37, 99, 235, 0.4);
+}
+
+/* ---- Status banner ---- */
+.sp-status-banner {
+    margin-top: 16px;
+    background: #ecfdf3;
+    border-radius: 12px;
+    padding: 12px 18px;
+    border: 1px solid #bbf7d0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.sp-status-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #166534;
+}
+
+.sp-status-icon {
+    font-size: 20px;
+    color: #22c55e;
+}
+
+.sp-status-label {
+    font-weight: 600;
+}
+
+.sp-status-value {
+    font-weight: 600;
+    color: #16a34a;
+}
+
+.sp-status-updated {
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* ---- Face capture area ---- */
+.sp-face-wrapper {
+    margin-top: 20px;
+    max-width: 800px;
+}
+
+.sp-face-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e5e7eb;
+    padding: 18px 20px 20px;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+    box-sizing: border-box;
+}
+
+.sp-video-wrapper {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #000;
+}
+
+.sp-video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.sp-video-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.sp-video-overlay-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sp-loader {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    animation: sp-spin 0.8s linear infinite;
+}
+
+@keyframes sp-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.sp-instruction {
+    margin-top: 14px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #111827;
+}
+
+.sp-progress-track {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 999px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.sp-progress-bar {
+    height: 100%;
+    width: 0;
+    background: #22c55e;
+    border-radius: 999px;
+    transition: width 0.25s ease;
+}
+
+.sp-progress-text {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.sp-btn-row {
+    margin-top: 14px;
+    display: flex;
+    gap: 10px;
+}
+
+.sp-btn {
+    border-radius: 8px;
+    border: none;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #ffffff;
+    transition: opacity 0.15s ease, transform 0.1s ease, box-shadow 0.1s ease;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.25);
+}
+
+.sp-btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+    box-shadow: none;
+}
+
+.sp-btn:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.3);
+}
+
+.sp-btn-green {
+    background: #16a34a;
+}
+
+.sp-btn-orange {
+    background: #f97316;
+}
+
+.sp-btn-blue {
+    background: #2563eb;
+}
+
+.sp-btn-submit {
+    margin-top: 14px;
+}
+
+/* Hidden form just stays out of view */
+.sp-hidden-form {
+    display: none;
+}
+
+/* ---- Feature cards grid ---- */
+.sp-feature-grid {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.sp-feature-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 18px 20px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.04);
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+    transition:
+        box-shadow 0.15s ease,
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.sp-feature-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.15);
+    border-color: #2563eb;
+}
+
+.sp-feature-primary {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.sp-feature-icon {
+    font-size: 26px;
+    color: #2563eb;
+}
+
+.sp-feature-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.sp-feature-desc {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.4;
+}
+
+/* Moves the logout button slightly up so it doesn't collide with bottom nav */
+.sp-logout-row {
+    position: fixed !important;
+    bottom: 80px !important;   /* puts it ABOVE bottom nav */
+    right: 120px !important;
+    z-index: 9999 !important;  /* stays visible */
+}
+
+
+.sp-logout-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #dc2626;
+    text-decoration: none;
+    transition: color 0.15s ease, transform 0.1s ease;
+}
+
+.sp-logout-link .material-icons-outlined {
+    font-size: 18px;
+}
+
+.sp-logout-link:hover {
+    color: #b91c1c;
+    transform: translateY(-1px);
+}
+
+/* ---- Responsive tweaks ---- */
+@media (max-width: 640px) {
+    .sp-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .sp-edit-btn {
+        align-self: stretch;
+        text-align: center;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .sp-status-banner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .sp-face-wrapper {
+        max-width: 100%;
+    }
+}
+
+    /* HARD FIX — Remove bottom curve from the content wrapper */
+    .sp-page {
+        border-radius: 0 !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    /* ===== POPUP BACKDROP ===== */
+    .face-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    }
+
+    .face-modal.hidden { display: none; }
+
+    /* ===== POPUP BOX ===== */
+    .face-modal-content {
+    background: white;
+    width: 380px;
+    padding: 25px;
+    border-radius: 14px;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    }
+
+    .face-modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    }
+
+    /* Camera preview box */
+    .face-video-wrapper {
+    width: 100%;
+    height: 260px;
+    background: black;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    }
+
+    .face-video-wrapper video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+
+
+    /* Buttons */
+    .face-btn {
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    color: white;
+    }
+
+    .face-btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+    }
+
+    .face-btn-green { background: #16a34a; }
+    .face-btn-orange { background: #f97316; }
+    .face-btn-blue { 
+    background: #2563eb;
+    width: 100%;
+    margin-top: 12px;
+    }
+
+    .face-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    }
+
+    .face-progress {
+    width: 100%;
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 8px;
+    margin: 10px 0 4px;
+    overflow: hidden;
+    }
+
+    .face-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #22c55e;
+    transition: 0.3s;
+    }
+
+    .face-progress-text {
+    font-size: 13px;
+    color: #6b7280;
+    }
+
+    /* Personal Details Modal Inputs */
+    .pd-input {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        margin-top: 4px;
+    }
+    .pd-input:disabled {
+        background: #f3f4f6;
+        color: #6b7280;
+    }
+    #personalModal.show {
+        opacity: 1;
+        transform: scale(1);
+    }
+    #personalModal.hide {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    #personalModal.show {
+        opacity: 1 !important;
+        transform: scale(1) !important;
+    }
+
+    #personalModal.hide {
+        opacity: 0 !important;
+        transform: scale(0.95) !important;
+    }
+
+    #personalModalBackdrop.active {
+        opacity: 1 !important;
+    }
+
+    #personalModalBackdrop {
+        opacity: 0;
+    }
+
+    .face-preview-row {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .face-preview {
+        width: 70px;
+        height: 70px;
+        background: #e5e7eb;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid #cbd5e1;
+    }
+
+    .face-close-btn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #ef4444;      /* red */
+        color: white;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .face-close-btn:hover {
+        background: #dc2626;
+    }
+
+</style>
+
+<script src="{{ url_for('static', filename='models/face-api.min.js') }}"></script>
+
+<script>
+
+// load the models from /static/models
+Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri('{{ url_for("static", filename="models") }}'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('{{ url_for("static", filename="models") }}'),
+    
+]).then(() => {
+    console.log("✔ All face-api models loaded");
+});
+
+let modal = document.getElementById("faceModal");
+let startBtn = document.getElementById("startCaptureBtn");
+
+let video = document.getElementById("modalVideo");
+let captureBtn = document.getElementById("modalCaptureBtn");
+let resetBtn = document.getElementById("modalResetBtn");
+let submitBtn = document.getElementById("modalSubmitBtn");
+
+let progress = document.getElementById("modalProgress");
+let countText = document.getElementById("modalCount");
+
+let images = [];
+let stream = null;
+
+// ----------- SHOW MODAL -------------
+startBtn.onclick = async () => {
+    modal.classList.remove("hidden");
+
+    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    video.srcObject = stream;
+};
+
+// ----------- CLOSE MODAL -------------
+document.getElementById("modalCloseBtn").onclick = closeModal;
+
+function closeModal() {
+    modal.classList.add("hidden");
+    images = [];
+    progress.style.width = "0%";
+    countText.textContent = "Captured: 0 / 3";
+
+    if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+    }
+}
+
+
+// ----------- CAPTURE FRAME -------------
+// ----------- CAPTURE FRAME (Original Working Version) -------------
+captureBtn.onclick = async () => {
+    if (images.length >= 3) return;
+
+    await new Promise(r => setTimeout(r, 200));
+
+    const detection = await faceapi
+        .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({
+            inputSize: 320,
+            scoreThreshold: 0.5
+        }))
+        .withFaceLandmarks();
+
+    if (!detection) {
+        alert("Face not detected! Ensure your full face is visible.");
+        return;
+    }
+
+    // CAPTURE IMAGE (original)
+    let canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
+
+    images.push(canvas.toDataURL("image/jpeg"));
+
+    progress.style.width = (images.length / 3 * 100) + "%";
+    countText.textContent = `Captured: ${images.length} / 3`;
+
+    if (images.length === 3) submitBtn.disabled = false;
+};
+
+// ----------- RESET BUTTON -------------
+resetBtn.onclick = () => {
+    images = [];
+    progress.style.width = "0%";
+    countText.textContent = "Captured: 0 / 3";
+    submitBtn.disabled = true;
+};
+
+// ----------- SUBMIT FACE DATA -------------
+submitBtn.onclick = async () => {
+    submitBtn.textContent = "Uploading...";
+    submitBtn.disabled = true;
+
+    let res = await fetch("/register_face", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ images })
+    });
+
+    let data = await res.json();
+
+    alert(data.msg);
+    closeModal();
+};
+
+
+const pdBackdrop = document.getElementById("personalModalBackdrop");
+const pdModal = document.getElementById("personalModal");
+
+const pdEditBtn = document.getElementById("pdEditBtn");
+const pdSaveBtn = document.getElementById("pdSaveBtn");
+const pdCancelBtn = document.getElementById("pdCancelBtn");
+const pdCloseBtn = document.getElementById("pdCloseBtn");
+
+/* FUNCTION: OPEN PERSONAL DETAILS MODAL */
+function openPersonalDetails(mode = "view") {
+    fillPersonalFields();
+
+    if (mode === "view") setViewMode();
+    else setEditMode();
+
+    pdBackdrop.classList.remove("hidden");
+    requestAnimationFrame(() => {
+        pdBackdrop.classList.add("active");
+        pdModal.classList.add("show");
+        pdModal.classList.remove("hide");
+    });
+}
+
+/* CLOSE MODAL */
+function closePersonalDetails() {
+    pdModal.classList.remove("show");
+    pdModal.classList.add("hide");
+
+    pdBackdrop.classList.remove("active");
+
+    setTimeout(() => {
+        pdBackdrop.classList.add("hidden");
+    }, 200);
+}
+
+
+/* FIELD ELEMENTS */
+const f_fullname = document.getElementById("pd_fullname");
+const f_personal_email = document.getElementById("pd_personal_email");
+const f_dob = document.getElementById("pd_dob");
+const f_gender = document.getElementById("pd_gender");
+const f_phone = document.getElementById("pd_phone");
+const f_parent_name = document.getElementById("pd_parent_name");
+const f_parent_contact = document.getElementById("pd_parent_contact");
+const f_address = document.getElementById("pd_address");
+
+/* VIEW-ONLY FIELDS */
+document.getElementById("pd_student_id").textContent = "{{ student_id }}";
+document.getElementById("pd_institute").textContent = "{{ institute_name }}";
+document.getElementById("pd_class").textContent = "{{ class_key }}";
+document.getElementById("pd_course").textContent = "{{ course }}";
+document.getElementById("pd_email").textContent = "{{ email }}";
+
+/* LOAD PERSONAL DETAILS INTO FIELDS */
+function fillPersonalFields() {
+    const pd = {{ personal_details|tojson if personal_details else "{}" }};
+
+    f_fullname.value = pd.full_name || "{{ student_name }}";
+    f_personal_email.value = pd.email || "{{ email }}";
+    f_dob.value = pd.dob || "";
+    f_gender.value = pd.gender || "";
+    f_phone.value = pd.phone || "";
+    f_parent_name.value = pd.parent_name || "";
+    f_parent_contact.value = pd.parent_contact || "";
+    f_address.value = pd.address || "";
+}
+
+/* MODE: VIEW */
+function setViewMode() {
+    pdEditBtn.classList.remove("hidden");
+    pdSaveBtn.classList.add("hidden");
+    pdCancelBtn.classList.add("hidden");
+
+    disableFields(true);
+}
+
+/* MODE: EDIT */
+function setEditMode() {
+    pdEditBtn.classList.add("hidden");
+    pdSaveBtn.classList.remove("hidden");
+    pdCancelBtn.classList.remove("hidden");
+
+    disableFields(false);
+}
+
+/* DISABLE/ENABLE INPUTS */
+function disableFields(disabled) {
+    [
+        f_fullname,
+        f_personal_email,
+        f_dob,
+        f_gender,
+        f_phone,
+        f_parent_name,
+        f_parent_contact,
+        f_address
+    ].forEach(f => f.disabled = disabled);
+}
+
+/* SAVE BUTTON HANDLER */
+pdSaveBtn.onclick = async () => {
+    const data = {
+        full_name: f_fullname.value,
+        email: f_personal_email.value,
+        dob: f_dob.value,
+        gender: f_gender.value,
+        phone: f_phone.value,
+        parent_name: f_parent_name.value,
+        parent_contact: f_parent_contact.value,
+        address: f_address.value
+    };
+
+    const res = await fetch("/update_personal_details", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            uid: "{{ student_uid }}",
+            personal_details: data
+        })
+    });
+
+    const out = await res.json();
+    alert(out.msg || "Updated!");
+
+    closePersonalDetails();
+};
+
+/* BUTTON EVENTS */
+pdCloseBtn.onclick = closePersonalDetails;
+pdCancelBtn.onclick = closePersonalDetails;
+pdEditBtn.onclick = () => setEditMode();
+
+/* OPEN MODAL FROM CARD */
+document.getElementById("personalDetailsCard").onclick = () => openPersonalDetails("view");
+
+/* OPEN MODAL FROM EDIT PROFILE BUTTON */
+document.querySelector(".sp-edit-btn").onclick = () => openPersonalDetails("edit");
+
+document.addEventListener("DOMContentLoaded", () => {
+    const pdCard = document.getElementById("personalDetailsCard");
+    if (pdCard) {
+        pdCard.addEventListener("click", () => {
+            openPersonalDetails("view");
+        });
+    } else {
+        console.error("Personal Details card not found!");
+    }
+});
+
+</script>
+
+{% endblock %}

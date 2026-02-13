@@ -1,0 +1,54 @@
+<nav>
+  <div class="brand">SmartMark</div>
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}" class="{% if active=='home' %}active{% endif %}">Home</a>
+    <a href="{{ url_for('login') }}" class="{% if active=='login' %}active{% endif %}">Login</a>
+    <a href="{{ url_for('dashboard') }}" class="{% if active=='dashboard' %}active{% endif %}">Dashboard</a>
+    <a href="{{ url_for('feature') }}" class="{% if active=='feature' %}active{% endif %}">Feature</a>
+    <a href="{{ url_for('about') }}" class="{% if active=='about' %}active{% endif %}">About</a>
+    <a href="{{ url_for('help') }}" class="{% if active=='help' %}active{% endif %}">Help</a>
+  </div>
+</nav>
+
+<style>
+nav {
+    width: 100%;
+    background: rgba(255,255,255,0.9);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+nav .brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(90deg,#4effbef2,#8e2de2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+nav .nav-links a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+    transition: 0.3s;
+    padding-bottom: 5px;
+}
+nav .nav-links a:hover { color:#1a237e; border-bottom:3px solid #1a237e; }
+
+/* Permanent highlight for Login */
+nav .nav-links a.active {
+    color:#1a237e;
+    border-bottom:3px solid #1a237e;
+}
+
+/* Extra: Keep login always highlighted */
+nav .nav-links a.login-active {
+    color:#1a237e !important;
+    border-bottom:3px solid #1a237e !important;
+}
+</style>   

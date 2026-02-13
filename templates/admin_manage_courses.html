@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Manage Courses | SmartMark</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  margin:0;
+  font-family:'Spline Sans',sans-serif;
+  background:#f8fafc;
+  color:#0f172a;
+}
+.container{
+  max-width:1200px;
+  margin:40px auto;
+  padding:0 24px;
+}
+.course-card{
+  background:#fff;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:28px;
+  box-shadow:0 10px 25px rgba(0,0,0,.06);
+}
+.course-title{
+  font-size:24px;
+  font-weight:700;
+  margin-bottom:16px;
+}
+.class-card{
+  background:#f1f5f9;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:14px;
+}
+.class-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+.subject{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#fff;
+  padding:10px 14px;
+  border-radius:10px;
+  margin-bottom:6px;
+}
+form.inline{
+  display:flex;
+  gap:8px;
+  margin-top:8px;
+}
+input{
+  padding:8px 10px;
+  border-radius:8px;
+  border:1px solid #cbd5f5;
+}
+button{
+  cursor:pointer;
+  border:none;
+  border-radius:8px;
+  padding:8px 14px;
+  font-weight:600;
+}
+.add{background:#3b82f6;color:#fff}
+.delete{background:#ef4444;color:#fff}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h1>Manage Courses</h1>
+
+    <a href="{{ url_for('admin_dashboard') }}"
+        style="
+        text-decoration:none;
+        background:#e2e8f0;
+        color:#0f172a;
+        padding:8px 16px;
+        border-radius:10px;
+        font-weight:600;
+        display:flex;
+        align-items:center;
+        gap:6px;
+        ">
+        ← Back
+    </a>
+  </div>
+
+
+  {% for course_code, course in courses.items() %}
+    <div class="course-card">
+
+    <div class="course-title">{{ course["name"] }}</div>
+
+    {% for class_key, cls in course["classes"].items() %}
+    <div class="class-card">
+
+        <div class="class-header">
+        <strong>{{ cls.get("display_name", class_key) }}</strong>
+
+        <a href="{{ url_for('delete_class',
+                            course_code=course_code,
+                            class_key=class_key) }}">
+            <button class="delete">Delete Class</button>
+        </a>
+        </div>
+
+        {% if cls.get("subjects") %}
+        {% for subject_name, sub in cls["subjects"].items() %}
+        <div class="subject">
+            <span>{{ subject_name }}</span>
+
+            <span style="
+                font-family:monospace;
+                font-size:14px;
+                color:#2563eb;
+                background:#e0f2fe;
+                padding:4px 10px;
+                border-radius:8px;
+            ">
+                {{ sub.get("password", "Not set") }}
+            </span>
+        </div>
+        {% endfor %}
+
+        {% else %}
+        <small style="color:#64748b;">No subjects yet</small>
+        {% endif %}
+
+        <!-- ADD SUBJECT -->
+        <form class="inline" method="POST" action="{{ url_for('admin_add_subject_new') }}">
+        <input type="hidden" name="course_code" value="{{ course_code }}">
+        <input type="hidden" name="class_key" value="{{ class_key }}">
+        <input name="subject_name" placeholder="New Subject" required>
+        <button class="add">+ Add Subject</button>
+        </form>
+
+    </div>
+    {% endfor %}
+
+    <!-- ADD CLASS -->
+    <form class="inline" method="POST" action="{{ url_for('add_class') }}">
+        <input type="hidden" name="course_code" value="{{ course_code }}">
+        <input name="class_name" placeholder="New Class Name" required>
+        <button class="add">+ Add Class</button>
+    </form>
+
+    </div>
+    {% endfor %}
+
+</div>
+</body>
+</html>
