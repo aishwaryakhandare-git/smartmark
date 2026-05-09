@@ -46,4 +46,3 @@ Firebase Realtime Database
 AI and Computer Vision
 OpenCV
 face_recognition
-NumPy
